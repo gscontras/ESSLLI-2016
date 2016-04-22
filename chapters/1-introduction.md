@@ -4,7 +4,7 @@ title: Introduction
 description: "An introductiion to the language understanding as probabilistic inference"
 ---
 
-Day 1: Language understanding as probabilistic inference
+###Day 1: Language understanding as probabilistic inference
 
   - Gricean pragmatics, probability theory, and utility functions 
   - The Rational Speech-Acts framework

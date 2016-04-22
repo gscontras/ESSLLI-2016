@@ -4,7 +4,7 @@ title: Deciding the ontology
 description: "Nouns, verbs, and determiners"
 ---
 
-Day 3: Representing nouns vs. verbs: stochastic typing
+###Day 3: Representing nouns vs. verbs: stochastic typing
 
 	- Nouns as distributions
 		- Determiners (the vs. a) and presupposition 
