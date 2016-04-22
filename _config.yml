@@ -1,8 +1,8 @@
 # Site settings
 
-title: PPAML Summer School 2016
-baseurl: "/ppaml2016"
-url: "http://probmods.github.io/ppaml2016"
+title: Composition in probabilistic language understanding
+baseurl: "/ESSLLI-2016"
+url: "http://gscontras.github.io/ESSLLI-2016"
 
 # Build settings
 markdown: kramdown
