@@ -1,7 +1,7 @@
 ---
 layout: chapter
 title: Introduction
-description: "An introductiion"
+description: "An introductiion to the language understanding as probabilistic inference"
 ---
 
 - Resources
@@ -57,4 +57,4 @@ print('Histogram of (bounded) Geometric distribution');
 viz.auto(boundedGeometric);
 ~~~~
 
-Here we link to the [next chapter](2-tour.html).
+Here we link to the [next chapter](2-uncertainty.html).

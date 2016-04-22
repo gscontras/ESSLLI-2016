@@ -1,6 +1,6 @@
 ---
 layout: chapter
-title: A tour through model space
+title: Modeling uncertainty
 description: "The second chapter"
 ---
 
@@ -17,3 +17,5 @@ description: "The second chapter"
   - Logistic regression
   - Bayesian neural net
   - ...others?
+
+Here we link to the [next chapter](3-typing.html).

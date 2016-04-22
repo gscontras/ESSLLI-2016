@@ -1,7 +1,7 @@
 ---
 layout: chapter
-title: Agents
-description: "The fifth chapter"
+title: Resolving ambiguity
+description: "Jointly inferring types and interpretations"
 ---
 
 - Resources
