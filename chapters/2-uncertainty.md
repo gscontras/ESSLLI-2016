@@ -5,6 +5,7 @@ description: "Building the literal interpretations"
 ---
 
 Day 2: Sources of uncertainty in semantic composition
+
   - Building the literal interpretations
   - Compositional mechanisms and semantic types
     - Functional Application; Predicate Modification 

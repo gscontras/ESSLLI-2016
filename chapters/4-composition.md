@@ -5,6 +5,7 @@ description: "Predication and modification"
 ---
 
 Day 4: Composing conditional distributions
+
 	- Implications of the type distinctions 
 	- Modification as conditioning
 	- Preferences in adjective ordering
