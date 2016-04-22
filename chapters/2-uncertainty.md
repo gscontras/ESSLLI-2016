@@ -4,7 +4,7 @@ title: Modeling uncertainty
 description: "Building the literal interpretations"
 ---
 
-###Day 2: Sources of uncertainty in semantic composition
+### Day 2: Sources of uncertainty in semantic composition
 
   - Building the literal interpretations
   - Compositional mechanisms and semantic types
