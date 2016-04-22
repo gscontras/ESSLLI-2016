@@ -2,6 +2,8 @@
 layout: default
 ---
 
+## Composition in Probabilistic Language Understanding
+
 {% assign sorted_pages = site.pages | sort:"name" %}
 
 {% for p in sorted_pages %}
