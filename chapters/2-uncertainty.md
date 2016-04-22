@@ -1,21 +1,13 @@
 ---
 layout: chapter
 title: Modeling uncertainty
-description: "The second chapter"
+description: "Building the literal interpretations"
 ---
 
-- Resources
-  - This is based partly on dippl, and partly on Forest, although we'll need to translate many of the models to webppl.
-- Content
-  - Markov models
-    - -> HMMs
-      - -> PCFGs
-  - Hierarchical models
-    - Bags of marbles
-  - Mixture models
-    - Topic models
-  - Logistic regression
-  - Bayesian neural net
-  - ...others?
+Day 2: Sources of uncertainty in semantic composition
+  - Building the literal interpretations
+  - Compositional mechanisms and semantic types
+    - Functional Application; Predicate Modification 
+  - The basic functionality of WebPPL
 
 Here we link to the [next chapter](3-typing.html).
