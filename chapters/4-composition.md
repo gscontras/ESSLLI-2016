@@ -1,13 +1,12 @@
 ---
 layout: chapter
 title: Composing meanings
-description: "Predication and modification"
+description: "Constraining a rich semantics"
 ---
 
 ### Day 4: Composing conditional distributions
 
-  - Implications of the type distinctions 
-  - Modification as conditioning
-  - Preferences in adjective ordering
+  - Okay semantics to overgenerate 
+  - Plural predication example
 
 Here we link to the [next chapter](5-ambiguity.html).

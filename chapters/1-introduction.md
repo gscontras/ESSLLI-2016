@@ -1,15 +1,14 @@
 ---
 layout: chapter
 title: Introduction
-description: "An introductiion to the language understanding as probabilistic inference"
+description: "An introductiion to the language understanding as Bayesian inference"
 ---
 
-### Day 1: Language understanding as probabilistic inference
+### Day 1: Language understanding as Bayesian inference
 
   - Gricean pragmatics, probability theory, and utility functions 
-  - The Rational Speech-Acts framework
-  - Semantic underspecification as lexical uncertainty
-    - Scalar adjectives
+  - The basic Rational Speech-Acts framework
+  - Background knowledge in language understanding
 
 
 One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; \cite{montague1973} builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them?
