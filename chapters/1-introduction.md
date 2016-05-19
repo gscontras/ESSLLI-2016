@@ -22,32 +22,21 @@ The present course serves to demonstrate that this semantic leveling is unnecess
 
 
 
-A code box example:
+Basic Frank and Goodman RSA model:
 
 ~~~~
-// Using the stochastic function `flip` we build a function that
-// returns 'H' and 'T' with equal probability:
+// Here is the code from the Frank and Goodman RSA model
 
-var coin = function(){
-  return flip(.5) ? 'H' : 'T';
-};
-
-var flips = [coin(), coin(), coin()];
-print("Some coin flips: " + flips);
-
-
-// We now use `flip` to define a sampler for the geometric distribution:
-
-var geometric = function(p) {
-  return flip(p) ? 1 + geometric(p) : 1
-};
-
-var boundedGeometric = Enumerate(
-  function(){ return geometric(0.5); }, 
-  20);
-
-print('Histogram of (bounded) Geometric distribution');
-viz.auto(boundedGeometric);
 ~~~~
+
+
+Goodman and Stuhlmüller Scalar Implicature model:
+
+~~~~
+// Here is the code from the Goodman and Stuhlmüller SI model
+
+~~~~
+
+
 
 Here we link to the [next chapter](2-uncertainty.html).

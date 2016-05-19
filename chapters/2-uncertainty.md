@@ -11,4 +11,9 @@ description: "Building the literal interpretations"
     - Functional Application; Predicate Modification 
   - The compositional semantics example from DIPPL
 
+~~~~
+// Here is the code from the DIPPL semantic parser
+
+~~~~
+
 Here we link to the [next chapter](3-examples.html).

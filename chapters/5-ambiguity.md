@@ -11,3 +11,13 @@ description: "Nouns, verbs, and determiners"
     - Determiners (*the* vs. *a*) and presupposition 
   - Modification as conditioning
   - Flexibility and inference in predication
+
+~~~~
+// Here is the code for the determiners model
+
+~~~~
+
+~~~~
+// Here is the code for the modifiers model
+
+~~~~

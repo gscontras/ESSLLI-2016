@@ -10,4 +10,9 @@ description: "Jointly inferring parameters and interpretations"
   - Quantification and inference
   - Rational domain restriction
 
+~~~~
+// Here is the code for the quantifier scope model
+
+~~~~
+
 Here we link to the [next chapter](4-composition.html).

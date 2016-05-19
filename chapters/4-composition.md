@@ -9,4 +9,9 @@ description: "Constraining a rich semantics"
   - Okay semantics to overgenerate 
   - Plural predication example
 
+~~~~
+// Here is the code for the plural predication model
+
+~~~~
+
 Here we link to the [next chapter](5-ambiguity.html).
