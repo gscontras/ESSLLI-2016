@@ -79,11 +79,11 @@ var listener = cache(function(utterance) {
     var inverse = flip(0.5);
     var QUD = QUDPrior();
     factor(speaker(inverse,state,QUD).score([],utterance));
-    return [inverse];
+    return [inverse,state];
   });
 });
 
-print(listener("all-not"));
+viz.hist(listener("all-not"));
 
 ~~~~
 
