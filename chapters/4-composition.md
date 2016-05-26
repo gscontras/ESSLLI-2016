@@ -6,7 +6,7 @@ description: "Constraining a rich semantics"
 
 ### Day 4: Composing conditional distributions
 
-  - Okay semantics to overgenerate 
+  - Okay for semantics to overgenerate 
   - Plural predication example
 
 ~~~~
