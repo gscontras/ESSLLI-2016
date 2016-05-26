@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+\usepackage[hmargin={1in},vmargin={1in,1in}]{geometry}   
+\geometry{letterpaper}            
+\usepackage[parfill]{parskip}
+\usepackage{color,graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{linguex}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{natbib}
+\usepackage[normalem]{ulem}
+\usepackage{wrapfig}
+
+\usepackage{fancyhdr}
+\lhead{ESSLLI 2016 course proposal}\chead{}\rhead{Composition in language understanding}
+\renewcommand{\headrulewidth}{.3pt}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+\newcommand{\txtp}{\textipa}
+\renewcommand{\rm}{\textrm}
+\newcommand{\sem}[1]{\mbox{$[\![$#1$]\!]$}}
+\newcommand{\lam}{$\lambda$}
+\newcommand{\lan}{$\langle$}
+\newcommand{\ran}{$\rangle$}
+\newcommand{\type}[1]{\ensuremath{\left \langle #1 \right \rangle }}
+\newcommand{\defeq}{$\mathrel{\mathop:}=$ }
+\renewcommand{\and}{$\wedge$ }
+
+\newcommand{\bex}{\begin{examples}}
+\newcommand{\eex}{\end{examples}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+\newcommand{\ben}{\begin{enumerate}}
+\newcommand{\een}{\end{enumerate}}
+
+\renewcommand{\bibsection}{}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\thispagestyle{plain}
+
+\begin{center}
+	
+	{\huge \textbf{Composition in Probabilistic Language Understanding}}\\[10pt]
+	
+	{\Large Gregory Scontras and Noah D. Goodman \\[10pt]
+	
+	\today}
+\end{center}
+
+
+
+%\subsection*{Abstract}
+
+%Recent advances in computational cognitive science (i.e., simulation-based probabilistic programs) have paved the way for significant progress in formal, implementable models of pragmatics. Rather than describing a pragmatic reasoning process, these models articulate and implement one, deriving both qualitative and quantitative predictions of human behavior---predictions that consistently prove correct, demonstrating the viability and value of the framework. However, these models operate at the utterance level, taking as their starting point whatever the compositional semantics delivers to them as the meaning of a proposition; the models deliberately avoid the composition of the literal interpretations over which they operate. We aim to change that, further shrinking the theoretical and practical distance between semantics and pragmatics by incorporating both within a single model of meaning in language. To that end, this course examines the ways that a semantic compositional mechanism may be modeled dynamically and probabilistically, within the broader framework of computational cognitive science.
+
+
+\subsection*{Outline}
+
+\bit
+\item[]
+\bit
+\item[Day 1:] Language understanding as probabilistic inference
+\bit
+\item Gricean pragmatics, probability theory, and utility functions
+\item The Rational Speech-Acts framework
+\item Semantic underspecification as lexical uncertainty
+\bit
+\item Scalar adjectives
+\eit
+\eit
+
+\item[Day 2:] Sources of uncertainty in semantic composition
+\bit
+\item Building the literal interpretations
+\item Compositional mechanisms and semantic types
+\bit
+\item Functional Application; Predicate Modification
+\eit
+\item The basic functionality of Church
+\eit
+
+\item[Day 3:] Representing nouns vs.~verbs: stochastic typing
+\bit
+\item Nouns as distributions
+\bit
+\item Determiners (\emph{the} vs.~\emph{a}) and presupposition
+\eit
+\item Verbs as stochastic predicates
+\item Flexibility and inference in predication
+\eit
+
+\item[Day 4:] Composing conditional distributions
+\bit
+\item Implications of the type distinctions
+\item Modification as conditioning
+\item Preferences in adjective ordering
+\eit
+
+\item[Day 5:] Jointly inferring types and interpretations
+\bit
+\item Scope phenomena as uncertainty
+\item Quantification and inference
+\item Rational domain restriction
+\eit
+
+\eit
+\eit
+
+
+
+
+
+\end{document}
+
+
+Models start at either end of semantics: lexicon or utterance
+
+Pragmatic interpretation influences semantics in the probabilistic view
+
+resolving underspecification
+
+sources of uncertainty/alternatives in semantics are ripe for probabilistic treatment
+
+parsing/composition/type ambiguity
+
+explore implications of probabilistic inference view language understanding for semantics questions
+
+are the types different? nouns vs. verbs (shalom lapin)

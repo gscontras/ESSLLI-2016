@@ -1,0 +1,224 @@
+\documentclass[11pt]{article}
+\usepackage[hmargin={1in},vmargin={1in,1in}]{geometry}   
+\geometry{letterpaper}            
+\usepackage[parfill]{parskip}
+\usepackage{color,graphicx}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{linguex}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{natbib}
+\usepackage[normalem]{ulem}
+\usepackage{wrapfig}
+
+\usepackage{fancyhdr}
+\lhead{ESSLLI 2016 course proposal}\chead{}\rhead{Composition in language understanding}
+\renewcommand{\headrulewidth}{.3pt}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+\newcommand{\txtp}{\textipa}
+\renewcommand{\rm}{\textrm}
+\newcommand{\sem}[1]{\mbox{$[\![$#1$]\!]$}}
+\newcommand{\lam}{$\lambda$}
+\newcommand{\lan}{$\langle$}
+\newcommand{\ran}{$\rangle$}
+\newcommand{\type}[1]{\ensuremath{\left \langle #1 \right \rangle }}
+\newcommand{\defeq}{$\mathrel{\mathop:}=$ }
+\renewcommand{\and}{$\wedge$ }
+
+\newcommand{\bex}{\begin{examples}}
+\newcommand{\eex}{\end{examples}}
+\newcommand{\bit}{\begin{itemize}}
+\newcommand{\eit}{\end{itemize}}
+\newcommand{\ben}{\begin{enumerate}}
+\newcommand{\een}{\end{enumerate}}
+
+\renewcommand{\bibsection}{}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+\thispagestyle{plain}
+
+\begin{center}
+	
+	{\huge \textbf{Composition in Probabilistic Language Understanding}}\\[10pt]
+	
+	{\Large Gregory Scontras and Noah D. Goodman \\[10pt]
+	
+	\today}
+\end{center}
+
+\section{Proposers}
+
+\begin{minipage}{.5\linewidth}
+	\textbf{Gregory Scontras}\\
+	Postdoctoral Scholar\\
+	Department of Psychology\\
+	Stanford University\\
+	Jordan Hall, Building 01-420\\
+	450 Serra Mall\\
+	Stanford, CA 94305\\
+	scontras$@$stanford.edu\\
+	http://web.stanford.edu/$\sim$scontras
+\end{minipage}
+\begin{minipage}{.5\linewidth}
+	\textbf{Noah D. Goodman}\\
+	Assistant Professor\\
+	Department of Psychology\\
+	Stanford University\\
+	Jordan Hall, Building 01-420\\
+	450 Serra Mall\\
+	Stanford, CA 94305\\
+	ngoodman$@$stanford.edu\\
+	http://cocolab.stanford.edu/ndg.html
+\end{minipage}
+
+
+\section{Proposal information}
+ 
+\textbf{Title:} Composition in probabilistic language understanding
+
+\textbf{Level:} Introductory (can also be taught at the Advanced level)
+
+\textbf{Category:} Language and Logic
+
+\section{Course content}
+
+\subsection{Abstract}
+
+Recent advances in computational cognitive science (i.e., simulation-based probabilistic programs) have paved the way for significant progress in formal, implementable models of pragmatics. Rather than describing a pragmatic reasoning process, these models articulate and implement one, deriving both qualitative and quantitative predictions of human behavior---predictions that consistently prove correct, demonstrating the viability and value of the framework. However, these models operate at the utterance level, taking as their starting point whatever the compositional semantics delivers to them as the meaning of a proposition; the models deliberately avoid the composition of the literal interpretations over which they operate. We aim to change that, further shrinking the theoretical and practical distance between semantics and pragmatics by incorporating both within a single model of meaning in language. To that end, this course examines the ways that a semantic compositional mechanism may be modeled dynamically and probabilistically, within the broader framework of computational cognitive science.
+
+\subsection{Motivation and description}
+
+One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; \cite{montague1973} builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them?
+
+Much work in formal, compositional semantics follows the tradition of positing systematic but inflexible theories of meaning. However, in practice, the meaning we derive from language is heavily dependent on nearly all aspects of context, both linguistic and situational. To formally explain these nuanced aspects of meaning and better understand the compositional mechanism that delivers them, recent work in formal pragmatics recognizes semantics not as one of the final steps in meaning calculation, but rather as one of the first. For example, within the Bayesian Rational Speech-Acts framework \citep{frankgoodman2012,goodmanstuhlmuller2013}, speakers and listeners reason about each other's reasoning about the literal interpretation of utterances. The resulting interpretation necessarily depends on the literal interpretation of an utterance, but is not necessarily wholly determined by it. This move---reasoning about likely interpretations---provides ready explanations for complex phenomena ranging from metaphor and hyperbole \citep{kaoetal2014metaphor,kaoetal2014} to the specification of thresholds in degree semantics \citep{lassitergoodman2013}.
+
+The probabilistic pragmatics approach leverages the tools of structured probabilistic models formalized in a stochastic $\lambda$-calculus to develop and refine a general theory of communication. The framework synthesizes the knowledge and approaches from diverse areas---formal semantics, Bayesian models of inference, formal theories of measurement, philosophy of language, etc.---into an articulated theory of language in practice. These new tools yield broader empirical coverage and richer explanations for linguistic phenomena through the recognition of language as a means of communication, not merely a vacuum-sealed formal system. By subjecting the heretofore off-limits land of pragmatics to articulated formal models, the rapidly growing body of research both informs pragmatic phenomena and enriches theories of semantics. Still, by operating primarily at the level of propositions, this approach necessarily eschews much of the compositional machinery that generates those propositions in the first place.
+
+The present course serves to demonstrate that this semantic leveling is unnecessary; our models of meaning not only can, but should take into account the rich compositionality of the communicative system they are meant to characterize. The many sources of uncertainty in semantic composition are ripe for a probabilistic treatment, and we now have the tools to deliver one.
+ We begin by presenting students with the general program of modeling language understanding as probabilistic inference. In tandem, we introduce students to the  probabilistic programming language Church \citep{goodmanetal2008church}, used as of yet to formalize models of pragmatics within the RSA framework (among many other applications in modeling social reasoning). We select Church not merely on the basis of its past success in modeling language phenomena, but also because the basic functionality we are after is already built into the system: lambda abstraction, functional application, declarative memory and thus the possibility for a lexicon.
+
+After demonstrating the motivation behind and general success of Church within the RSA framework, we narrow our focus to the literal semantics that gets assumed. We provide students a practical introduction to stochastic $\lambda$-calculus, showing how to capture \citeauthor{montague1973}'s original motivations in semantic composition (as demonstrated in \citealp{goodmanlassiter2015handbook}). We then expand our sights to broader, architectural issues like stochastic typing. We consider nominal vs.~verbal meaning, showing that the former is best modeled as a probability distribution while the latter is best modeled as a true predicate. Next, we consider modification and introduce the notion of conditioning, showing that the output of modification most likely serves as a conditional distribution. Finally, we tackle scope phenomena, showing how the injection of compositional semantics into the RSA framework allows for the joint inference of types and interpretations, a move that stands to deliver accounts of quantifier domain restriction and scope ambiguity.
+In each of these applications, we highlight how a comprehensive approach to modeling language meaning, which treats semantics and pragmatics jointly as a process of probabilistic inference, not only increases the validity of our semantic theories, but more directly informs the psychological underpinnings of language.
+
+\nocite{heimkratzer1998,mcnally,lassitergoodman2015}
+
+%
+
+ 
+\subsection{Tentative outline}
+
+\bit
+\item[]
+\bit
+\item[Day 1:] Language understanding as probabilistic inference
+\bit
+\item Gricean pragmatics, probability theory, and utility functions
+\item The Rational Speech-Acts framework
+\item Semantic underspecification as lexical uncertainty
+\eit
+
+\item[Day 2:] Sources of uncertainty in semantic composition
+\bit
+\item Building the literal interpretations
+\item Compositional mechanisms and semantic types
+\item The basic functionality of Church
+\eit
+
+\item[Day 3:] Representing nouns vs.~verbs: stochastic typing
+\bit
+\item Nouns as distributions
+\item Verbs as stochastic predicates
+\item Flexibility and inference in predication
+\eit
+
+\item[Day 4:] Composing conditional distributions
+\bit
+\item Implications of the type distinctions
+\item Modification as conditioning
+\item Preferences in adjective ordering
+\eit
+
+\item[Day 5:] Jointly inferring types and interpretations
+\bit
+\item Scope phenomena as uncertainty
+\item Quantification and inference
+\item Rational domain restriction
+\eit
+
+\eit
+\eit
+
+\subsection{Expected level and prerequisites}
+
+We expect a basic familiarity with logic, formal semantics, and pragmatics. Experience with probability theory and computational modeling is ideal, but not essential.
+
+\subsection{Appropriate references}
+
+We will draw from the works cited below as we develop our own course materials in the form of an online textbook. This approach has proven successful in previous introductions to probabilistic modeling (cf.~https://probmods.org; http://dippl.org).\\
+
+\bibliographystyle{sp}
+\bibliography{greg.bib}
+
+\section{Practical information}
+
+\subsection{Relevant preceding meetings and events} \label{other-courses}
+
+There have been a number of recent courses on probabilistic models of pragmatic inference, owing to their growing popularity and increased success. Our course stands apart with its focus on the compositional intricacies of semantics. Students, whether completely naive to or acutely familiar with a modeling approach, will gain both practical and philosophical insight into the modeling of inference and composition in formal semantics.
+
+\bit
+\item ESSLLI 2010 \emph{Computational Cognitive Science: Probability, Programs, and the Mind}\\
+(taught by Noah D.~Goodman)
+\item NASSLLI 2012 \emph{Stochastic Lambda Calculus and Its Applications in Cognitive Science}\\
+(taught by Noah D.~Goodman)
+\item ESSLLI 2013 \emph{Probability in Semantics and Pragmatics}\\
+(taught by Noah D.~Goodman and Daniel Lassiter)
+\item NASSLLI 2014 \emph{Language Understanding and Bayesian Inference}\\
+ (taught by Daniel Lassiter)
+\item ESSLLI 2014 \emph{Probabilistic Programming Languages}\\
+(taught by Noah D.~Goodman and Andreas Stuhlm\"{u}ller)
+\item ESSLLI 2015 \emph{Probabilistic and Experimental Pragmatics}\\
+(taught by Judith Degen and Michael Franke)
+\eit
+
+Recent work by Robin Cooper, Shalom Lappin and colleagues has approached probabilistic semantics from the perspective of semantic learning within computational linguistics, focusing on probabilistic type judgments using type theory with records. Where these approaches revise the essentials of a Montague-style semantics, ours is more conservative, preserving a compositional, truth conditional semantics while adopting a stochastic $\lambda$-calculus. As such, our approach will be more familiar, and therefore more accessible to the uninitiated.
+
+\bit
+\item NASSLLI 2012 \emph{Type Theory with Records for Natural Language Semantics}\\
+(taught by Robin Cooper)
+\item ESSLLI 2012 \emph{An Introduction to Semantics using Type Theory with Records}\\
+(taught by Robin Cooper and Jonathan Ginzburg)
+\item NASSLLI 2014 \emph{Probabilistic Approaches to Syntax and Semantics}\\
+(taught by Shalom Lappin)
+\eit
+
+\nocite{cooperetal2014}
+
+\subsection{Potential external funding}
+
+It is likely that the instructors will be able to cover traveling expenses themselves.
+
+
+
+
+\end{document}
+
+
+Models start at either end of semantics: lexicon or utterance
+
+Pragmatic interpretation influences semantics in the probabilistic view
+
+resolving underspecification
+
+sources of uncertainty/alternatives in semantics are ripe for probabilistic treatment
+
+parsing/composition/type ambiguity
+
+explore implications of probabilistic inference view language understanding for semantics questions
+
+are the types different? nouns vs. verbs (shalom lapin)

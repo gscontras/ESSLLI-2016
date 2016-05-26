@@ -1,0 +1,77 @@
+;; speaker optimality helper function
+(define alpha 1)
+(define (power lst alpha) (map (lambda (x) (expt x alpha)) lst))
+
+;; possible utterances
+(define utterances '(null all-not))
+(define (utterance-prior) (multinomial utterances '(1 1)))
+
+;; possible world states
+(define states '(0 1 2))
+(define (state-prior) (multinomial states '(1 1 1))) ;; here is where context will affect likely states
+
+;; QUDs
+(define QUDs '(null succeed? fail?))
+(define (QUD-prior) (multinomial QUDs '(1 1 1)))
+(define (QUD-fun QUD state)
+        (case QUD
+          (('succeed?) (= state 2))
+          (('fail?) (= state 0))
+          (('null) state)))
+
+;; meaning function
+(define (meaning utterance state inverse?)
+  (case utterance
+        (('all-not)
+         (if inverse?
+             (< state 2)
+             (= state 0)
+             ))
+        (('null)
+         #t
+         )))
+
+
+;; Pragmatic listener
+(define prag-listener
+  (mem
+   (lambda (utterance)
+     (enumeration-query
+      (define state (state-prior))
+      (define inverse? (flip 0.5))
+      (define QUD (QUD-prior))
+
+      (list state)
+
+      (condition (equal? (apply multinomial (speaker inverse? state QUD)) utterance))
+      ))))
+
+;; speaker S
+(define (speaker inverse? state QUD)
+  (enumeration-query
+   (define utterance (utterance-prior))
+   (define listeners-world (apply multinomial 
+                                  (list (first (listener utterance inverse? QUD
+                                                         )) 
+                                        (power (second (listener utterance inverse? QUD)) 
+                                               alpha))))
+   
+   utterance
+
+   (equal? listeners-world (QUD-fun QUD state))
+   ))
+
+
+;; literal listener L0
+(define listener
+  (mem
+   (lambda (utterance inverse? QUD)
+     (enumeration-query
+      (define state (state-prior))
+      
+      (QUD-fun QUD state)
+      
+      (condition (meaning utterance state inverse?))
+      ))))
+
+(prag-listener 'all-not)
