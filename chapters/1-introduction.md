@@ -26,6 +26,52 @@ Basic Frank and Goodman RSA model:
 
 ~~~~
 // Here is the code from the Frank and Goodman RSA model
+var worlds = [
+ {obj: "circle", color: "blue"},
+ {obj: "square", color: "green"},
+ {obj: "square", color: "blue"},
+]
+
+var utterances = ["blue","green","square","circle"]
+
+var meaning = function(u, w){
+ return u == "blue" ? u==w.color :
+ u == "green" ? u==w.color :
+ u == "circle" ? u==w.obj :
+ u == "square" ? u==w.obj :
+ true
+}
+
+
+var literalListener = function(utt){
+ Enumerate(function(){
+   var world = uniformDraw(worlds)
+   condition(meaning(utt, world))
+   return world
+ })
+}
+
+var speaker = function(world){
+ Enumerate(function(){
+   var utt = uniformDraw(utterances)
+   var L0 = literalListener(utt)
+   // condition (L0 == world)
+   factor(L0.score([], world)) // alpha * log p(w | u)
+   return utt
+ })
+}
+
+var pragmaticListener = function(utt){
+ Enumerate(function(){
+   var world = uniformDraw(worlds)
+   var s1 = speaker(world)
+   factor(5*s1.score([], utt))
+   return world
+ })
+}
+viz.table(literalListener( "blue"))
+viz.table(speaker({obj:"circle", color: "blue"}))
+viz.table(pragmaticListener("blue"))
 
 ~~~~
 
