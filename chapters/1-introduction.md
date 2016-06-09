@@ -79,7 +79,50 @@ viz.table(pragmaticListener("blue"))
 Goodman and Stuhlmüller Scalar Implicature model:
 
 ~~~~
-// Here is the code from the Goodman and Stuhlmüller SI model
+// Here is the code from the Goodman and Stuhlmüller basic SI model
+
+var alpha = 2;
+
+var statePrior = function() {
+  return uniformDraw([0, 1, 2, 3]);
+};
+
+var literalMeanings = {
+  allSprouted: function(state) { return state === 3; },
+  someSprouted: function(state) { return state > 0; },
+  noneSprouted: function(state) { return state === 0; }
+};
+
+var sentencePrior = function() {
+  return uniformDraw(['allSprouted', 'someSprouted', 'noneSprouted']);
+};
+
+var literalListener = cache(function(sentence) {
+  return Enumerate(function(){
+    var state = statePrior();
+    var meaning = literalMeanings[sentence];
+    condition(meaning(state));
+    return state;
+  })
+});
+
+var speaker = cache(function(state) {
+  return Enumerate(function(){
+    var sentence = sentencePrior();
+    factor(alpha * literalListener(sentence).score([], state));
+    return sentence;
+  });
+});
+
+var listener = cache(function(sentence) {
+  return Enumerate(function(){
+    var state = statePrior();
+    factor(speaker(state).score([], sentence));
+    return state;
+  })
+});
+
+viz.auto(listener('someSprouted'));
 
 ~~~~
 
