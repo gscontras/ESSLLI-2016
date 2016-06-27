@@ -17,7 +17,7 @@
   },
   "homepage": "https://gscontras.github.io/ESSLLI-2016",
   "dependencies": {
-    "webppl": "^0.6.2",
+    "webppl": "^0.8.1",
     "webppl-timeit": "^0.3.0",
     "webppl-viz": "github:probmods/webppl-viz",
     "wp-editor": "github:probmods/webppl-editor"
