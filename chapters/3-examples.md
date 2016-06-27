@@ -54,7 +54,8 @@ var meaning = function(utterance,state,inverse) {
 
 // Literal listener (L0)
 var literal = cache(function(utterance,inverse,QUD) {
-  return Enumerate(function() {
+  return Infer({method:"enumerate"},
+  function(){
     var state = statePrior();
     var qState = QUDFun(QUD,state)
     condition(meaning(utterance,state,inverse));
@@ -64,21 +65,23 @@ var literal = cache(function(utterance,inverse,QUD) {
 
 // Speaker (S)
 var speaker = cache(function(inverse,state,QUD) {
-  return Enumerate(function() {
+  return Infer({method:"enumerate"},
+  function(){
     var utterance = utterancePrior();
     var qState = QUDFun(QUD,state);
-    factor(alpha * literal(utterance,inverse,QUD).score([],qState));
+    factor(alpha * literal(utterance,inverse,QUD).score(qState));
     return utterance;
   });
 });
 
 // Pragmatic listener (L1)
 var listener = cache(function(utterance) {
-  return Enumerate(function() {
+  return Infer({method:"enumerate"},
+  function(){
     var state = statePrior();
     var inverse = flip(0.5);
     var QUD = QUDPrior();
-    factor(speaker(inverse,state,QUD).score([],utterance));
+    factor(speaker(inverse,state,QUD).score(utterance));
     return [inverse,state];
   });
 });

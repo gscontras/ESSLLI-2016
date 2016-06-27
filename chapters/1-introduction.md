@@ -44,7 +44,8 @@ var meaning = function(u, w){
 
 
 var literalListener = function(utt){
- Enumerate(function(){
+ Infer({method:"enumerate"},
+  function(){
    var world = uniformDraw(worlds)
    condition(meaning(utt, world))
    return world
@@ -52,20 +53,22 @@ var literalListener = function(utt){
 }
 
 var speaker = function(world){
- Enumerate(function(){
+ Infer({method:"enumerate"},
+  function(){
    var utt = uniformDraw(utterances)
    var L0 = literalListener(utt)
    // condition (L0 == world)
-   factor(L0.score([], world)) // alpha * log p(w | u)
+   factor(L0.score(world)) // alpha * log p(w | u)
    return utt
  })
 }
 
 var pragmaticListener = function(utt){
- Enumerate(function(){
+ Infer({method:"enumerate"},
+  function(){
    var world = uniformDraw(worlds)
    var s1 = speaker(world)
-   factor(5*s1.score([], utt))
+   factor(5*s1.score(utt))
    return world
  })
 }
@@ -98,7 +101,8 @@ var sentencePrior = function() {
 };
 
 var literalListener = cache(function(sentence) {
-  return Enumerate(function(){
+  return Infer({method:"enumerate"},
+  function(){
     var state = statePrior();
     var meaning = literalMeanings[sentence];
     condition(meaning(state));
@@ -107,17 +111,19 @@ var literalListener = cache(function(sentence) {
 });
 
 var speaker = cache(function(state) {
-  return Enumerate(function(){
+  return Infer({method:"enumerate"},
+  function(){
     var sentence = sentencePrior();
-    factor(alpha * literalListener(sentence).score([], state));
+    factor(alpha * literalListener(sentence).score(state));
     return sentence;
   });
 });
 
 var listener = cache(function(sentence) {
-  return Enumerate(function(){
+  return Infer({method:"enumerate"},
+  function(){
     var state = statePrior();
-    factor(speaker(state).score([], sentence));
+    factor(speaker(state).score(sentence));
     return state;
   })
 });
