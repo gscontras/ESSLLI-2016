@@ -79,13 +79,11 @@ var pragmaticListener = function(utt){
  })
 }
 
-// literal listener's interpretation of "blue"
+print("literal listener's interpretation of 'blue':")
 viz.table(literalListener( "blue"))
-
-// speaker's utterance distribution for a blue circle
+print("speaker's utterance distribution for a blue circle:")
 viz.table(speaker({obj:"circle", color: "blue"}))
-
-// pragmatic listener's interpretation of "blue"
+print("pragmatic listener's interpretation of 'blue':")
 viz.table(pragmaticListener("blue"))
 
 ~~~~
