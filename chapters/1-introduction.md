@@ -89,7 +89,7 @@ viz.table(pragmaticListener("blue"))
 ~~~~
 
 
-Goodman and Stuhlmüller (2013) Scalar Implicature model:
+Goodman and Stuhlmüller (2013) basic Scalar Implicature model:
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller basic SI model
@@ -150,6 +150,94 @@ viz.auto(pragmaticListener('some'));
 
 ~~~~
 
+Goodman and Stuhlmüller (2013) speaker-access Scalar Implicature model:
+
+~~~~
+// Here is the code from the Goodman and Stuhlmüller speaker-access SI model
+
+// red apple base rate
+var baserate = 0.8
+
+// state builder
+var substatePriors = function() {
+  var s1 = flip(baserate);
+  var s2 = flip(baserate);
+  var s3 = flip(baserate);
+  return [s1,s2,s3];
+}
+
+// speaker belief function
+var belief = function(actualState, access) {
+  var fun = function(access,state,prior) {
+    var sp = (substatePriors());
+    return access ? state : _.sample(sp)
+  }
+  return map2(fun,access,actualState);
+}
+
+// state prior
+var statePrior = function() {
+  return substatePriors();
+} 
+
+// utterance prior
+var utterancePrior = function() {
+  uniformDraw(['all','some','none']);
+}
+
+// meaning funtion to interpret utterances
+var literalMeanings = {
+  all: function(state) { return all(function(s){s},state); },
+  some: function(state) { return any(function(s){s},state); },
+  none: function(state) { return all(function(s){s==false},state); }
+};
+
+// literal listener
+var literalListener = cache(function(utt) {
+  return Infer({method:"enumerate"},
+               function(){
+    var state = statePrior();
+    var meaning = literalMeanings[utt];
+    condition(meaning(state));
+    return state;
+  })
+});
+
+// pragmatic speaker
+var speaker = cache(function(access,state) {
+  return Infer({method:"enumerate"},
+               function(){
+    var utt = utterancePrior();
+    var beliefState = belief(state,access);
+    factor(literalListener(utt).score(beliefState));
+    return utt;
+  });
+});
+
+// tally up the state
+var numTrue = function(state) {
+  var fun = function(x) {
+    x ? 1 : 0;
+  }
+  return sum(map(fun,state));
+}
+
+// pragmatic listener
+var pragmaticListener = cache(function(access,utt) {
+  return Infer({method:"enumerate"},
+               function(){
+    var state = statePrior();
+    factor(speaker(access,state).score(utt));
+    return numTrue(state);
+  })
+});
+
+print("literal listener for a partial-access speaker:")
+viz.auto(pragmaticListener([true,true,false],'some'))
+print("literal listener for a full-access speaker:")
+viz.auto(pragmaticListener([true,true,true],'some'))
+
+~~~~
 
 
 Here we link to the [next chapter](2-uncertainty.html).
