@@ -89,7 +89,7 @@ viz.table(pragmaticListener("blue"))
 ~~~~
 
 
-Goodman and Stuhlmüller Scalar Implicature model:
+Goodman and Stuhlmüller (2013) Scalar Implicature model:
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller basic SI model
@@ -103,7 +103,7 @@ var statePrior = function() {
 };
 
 // possible utterances
-var sentencePrior = function() {
+var utterancePrior = function() {
   return uniformDraw(['all', 'some', 'none']);
 };
 
@@ -115,11 +115,11 @@ var literalMeanings = {
 };
 
 // literal listener
-var literalListener = cache(function(sentence) {
+var literalListener = cache(function(utt) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    var meaning = literalMeanings[sentence];
+    var meaning = literalMeanings[utt];
     condition(meaning(state));
     return state;
   })
@@ -129,18 +129,18 @@ var literalListener = cache(function(sentence) {
 var speaker = cache(function(state) {
   return Infer({method:"enumerate"},
   function(){
-    var sentence = sentencePrior();
-    factor(alpha * literalListener(sentence).score(state));
-    return sentence;
+    var utt = utterancePrior();
+    factor(alpha * literalListener(utt).score(state));
+    return utt;
   });
 });
 
 // pragmatic listener
-var pragmaticListener = cache(function(sentence) {
+var pragmaticListener = cache(function(utt) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    factor(speaker(state).score(sentence));
+    factor(speaker(state).score(utt));
     return state;
   })
 });
