@@ -22,16 +22,16 @@ The present course serves to demonstrate that this semantic leveling is unnecess
 
 
 
-Basic Frank and Goodman RSA model:
+Basic Frank and Goodman (2012) RSA model:
 
 ~~~~
 // Here is the code from the Frank and Goodman RSA model
 
 // possible states of the world
 var worlds = [
-{obj: "square", color: "blue"},
- {obj: "circle", color: "blue"},
- {obj: "square", color: "green"}
+  {obj: "square", color: "blue"},
+  {obj: "circle", color: "blue"},
+  {obj: "square", color: "green"}
 ]
 
 // possible one-word utterances
@@ -39,44 +39,44 @@ var utterances = ["blue","green","square","circle"]
 
 // meaning funtion to interpret the utterances
 var meaning = function(u, w){
- return u == "blue" ? u==w.color :
- u == "green" ? u==w.color :
- u == "circle" ? u==w.obj :
- u == "square" ? u==w.obj :
- true
+  return u == "blue" ? u==w.color :
+  u == "green" ? u==w.color :
+  u == "circle" ? u==w.obj :
+  u == "square" ? u==w.obj :
+  true
 }
 
 // literal listener
 var literalListener = function(utt){
- Infer({method:"enumerate"},
-  function(){
-   var world = uniformDraw(worlds)
-   condition(meaning(utt, world))
-   return world
- })
+  Infer({method:"enumerate"},
+        function(){
+    var world = uniformDraw(worlds)
+    condition(meaning(utt, world))
+    return world
+  })
 }
 
 // pragmatic speaker
 var speaker = function(world){
- Infer({method:"enumerate"},
-  function(){
-   var utt = uniformDraw(utterances)
-   var L0 = literalListener(utt)
-   // condition (L0 == world)
-   factor(L0.score(world)) // alpha * log p(w | u)
-   return utt
- })
+  Infer({method:"enumerate"},
+        function(){
+    var utt = uniformDraw(utterances)
+    var L0 = literalListener(utt)
+    // condition (L0 == world)
+    factor(L0.score(world)) // alpha * log p(w | u)
+    return utt
+  })
 }
 
 // pragmatic listener
 var pragmaticListener = function(utt){
- Infer({method:"enumerate"},
-  function(){
-   var world = uniformDraw(worlds)
-   var s1 = speaker(world)
-   factor(5*s1.score(utt))
-   return world
- })
+  Infer({method:"enumerate"},
+        function(){
+    var world = uniformDraw(worlds)
+    var s1 = speaker(world)
+    factor(5*s1.score(utt))
+    return world
+  })
 }
 
 print("literal listener's interpretation of 'blue':")
