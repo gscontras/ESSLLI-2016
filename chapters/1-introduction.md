@@ -94,22 +94,27 @@ Goodman and Stuhlmüller Scalar Implicature model:
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller basic SI model
 
+// speaker optimality parameter
 var alpha = 2;
 
+// possible states of the world
 var statePrior = function() {
   return uniformDraw([0, 1, 2, 3]);
 };
 
-var literalMeanings = {
-  allSprouted: function(state) { return state === 3; },
-  someSprouted: function(state) { return state > 0; },
-  noneSprouted: function(state) { return state === 0; }
-};
-
+// possible utterances
 var sentencePrior = function() {
-  return uniformDraw(['allSprouted', 'someSprouted', 'noneSprouted']);
+  return uniformDraw(['all', 'some', 'none']);
 };
 
+// meaning funtion to interpret the utterances
+var literalMeanings = {
+  all: function(state) { return state === 3; },
+  some: function(state) { return state > 0; },
+  none: function(state) { return state === 0; }
+};
+
+// literal listener
 var literalListener = cache(function(sentence) {
   return Infer({method:"enumerate"},
   function(){
@@ -120,6 +125,7 @@ var literalListener = cache(function(sentence) {
   })
 });
 
+// pragmatic speaker
 var speaker = cache(function(state) {
   return Infer({method:"enumerate"},
   function(){
@@ -129,7 +135,8 @@ var speaker = cache(function(state) {
   });
 });
 
-var listener = cache(function(sentence) {
+// pragmatic listener
+var pragmaticListener = cache(function(sentence) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
@@ -138,7 +145,8 @@ var listener = cache(function(sentence) {
   })
 });
 
-viz.auto(listener('someSprouted'));
+print("pragmatic listener's interpretation of 'some':")
+viz.auto(pragmaticListener('some'));
 
 ~~~~
 
