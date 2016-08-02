@@ -17,6 +17,23 @@ The Rational Speech-Act (RSA) framework views communication as recursive reasoni
 
 In more detail, the pragmatic listener *L1* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S1*, this probability is proportional to the probability that *S1* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
 
+$$
+\begin{align*}
+  & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
+  = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
+  & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
+      \phi(e_1, e_1) & \cdots & \phi(e_1, e_n) \\
+      \vdots & \ddots & \vdots \\
+      \phi(e_n, e_1) & \cdots & \phi(e_n, e_n)
+    \end{array} \right)
+  \left( \begin{array}{c}
+      y_1 \\
+      \vdots \\
+      y_n
+    \end{array} \right)
+\end{align*}
+$$
+
 $$ The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s) $$
 
 The speaker *S1* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L0*. In other words, *S1* wants to minimize the effort *L0* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S1* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L0*, while bearing in mind the utterance cost, $$C(u)$$.
@@ -25,7 +42,7 @@ Speakers act in accordance with the speaker’s utility function *US1*: utteranc
 
 $$The speaker’s utility function: US1(u;s) = logL0(s|u)−C(u)$$
 
-With this utility function in mind, *S1* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US1*. The term $α > 0$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (α corresponds to the temperature parameter of S1’s soft-max optimiza- tion.)
+With this utility function in mind, *S1* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US1*. The term $α > 0$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (α corresponds to the temperature parameter of S1’s soft-max optimization.)
 
 $$The pragmatic speaker: PS1(u|s)∝exp(αUS1(u;s))$$
 
