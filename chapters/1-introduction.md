@@ -33,14 +33,15 @@ At the base of this reasoning, the naive, literal listener *L<sub>0</sub>* inter
 
   - The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)
 
-Within the RSA framework, communication is thus modeled as in Fig. 8, where L<sub>1</sub> reasons about S<sub>1</sub>’s reasoning about a hypothetical L<sub>0</sub>.
+Within the RSA framework, communication is thus modeled as in Fig. 1, where L<sub>1</sub> reasons about S<sub>1</sub>’s reasoning about a hypothetical L<sub>0</sub>.
 
-$$L<sub>1</sub> pragmatic listener PL<sub>1</sub> (s|u) ∝ PS<sub>1</sub> (u|s) · P(s)
-S<sub>1</sub> pragmaticspeaker PS<sub>1</sub>(u|s)∝exp(αUS<sub>1</sub>(u;s))
-L<sub>0</sub> literal listener PL<sub>0</sub> (s|u) ∝ [[u]](s) · P(s) 
-Figure 8 Graphical representation of the Bayesian RSA model.$$
+![Fig. 1: Graphical representation of the Bayesian RSA model.](file:///Users/Greg/Documents/git/CoCoLab/ESSLLI-2016/images/rsa_schema.pdf)
 
-In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 9. Suppose a speaker wants to signal an object, but only has a single word with which to do so. Applying the RSA model schematized in Fig. 8 to the communication scenario in Fig. 9, the speaker *S<sub>1</sub>* chooses a word *u* to best signal an object *s* to a literal listener *L<sub>0</sub>*, who interprets *u* in proportion to the prior probability of naming objects in the scenario (i.e., to an object’s salience, P(s)). The pragmatic listener *L<sub>1</sub>* reasons about the speaker’s reasoning, and interprets *u* accordingly. By formalizing the contributions of salience and efficiency, the RSA framework provides an information-theoretic definition of informativeness in pragmatic inference. <!-- This definition will prove crucial in understanding the contribution of contextual pre- dictability of collective properties in the interpretation of plural predication. -->
+In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 2. 
+
+![Fig.~2: Example referential communication scenario from Frank & Goodman (2012). Speakers choose a single word, *u*, to signal an object, *s*.](file:///Users/Greg/Documents/git/CoCoLab/ESSLLI-2016/images/rsa_scene.pdf)
+
+Suppose a speaker wants to signal an object, but only has a single word with which to do so. Applying the RSA model schematized in Fig. 1 to the communication scenario in Fig. 2, the speaker *S<sub>1</sub>* chooses a word *u* to best signal an object *s* to a literal listener *L<sub>0</sub>*, who interprets *u* in proportion to the prior probability of naming objects in the scenario (i.e., to an object’s salience, P(s)). The pragmatic listener *L<sub>1</sub>* reasons about the speaker’s reasoning, and interprets *u* accordingly. By formalizing the contributions of salience and efficiency, the RSA framework provides an information-theoretic definition of informativeness in pragmatic inference. <!-- This definition will prove crucial in understanding the contribution of contextual pre- dictability of collective properties in the interpretation of plural predication. -->
 
 ~~~~
 // Here is the code from the Frank and Goodman RSA model
