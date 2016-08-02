@@ -13,34 +13,34 @@ description: "An introduction to language understanding as Bayesian inference"
 
 <!-- One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; \cite{montague1973} builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them? -->
 
-The Rational Speech-Act (RSA) framework views communication as recursive reasoning between a speaker and a listener. The listener interprets the speaker’s utterance by reasoning about a cooperative speaker trying to inform a naive listener about some state of affairs. Using Bayesian inference, the listener infers what the state of the world is likely to be given that a speaker produced some utterance, knowing that the speaker is reasoning about how a listener is most likely to interpret that utterance. Thus, we have at least three levels of inference. At the top, the sophisticated, **pragmatic listener**, *L~1~*, reasons about the **pragmatic speaker**, *S<sub>1</sub>*, and infers the state of the world *s* given that the speaker chose to produce the utterance *u*. The speaker chooses *u* by maximizing the probability that a naive, **literal listener**, *L0*, would correctly infer the state of the world *s* given the literal meaning of *u*.
+The Rational Speech-Act (RSA) framework views communication as recursive reasoning between a speaker and a listener. The listener interprets the speaker’s utterance by reasoning about a cooperative speaker trying to inform a naive listener about some state of affairs. Using Bayesian inference, the listener infers what the state of the world is likely to be given that a speaker produced some utterance, knowing that the speaker is reasoning about how a listener is most likely to interpret that utterance. Thus, we have at least three levels of inference. At the top, the sophisticated, **pragmatic listener**, *L<sub>1</sub>*, reasons about the **pragmatic speaker**, *S<sub>1</sub>*, and infers the state of the world *s* given that the speaker chose to produce the utterance *u*. The speaker chooses *u* by maximizing the probability that a naive, **literal listener**, *L<sub>0</sub>*, would correctly infer the state of the world *s* given the literal meaning of *u*.
 
-In more detail, the pragmatic listener *L1* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S1*, this probability is proportional to the probability that *S1* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
+In more detail, the pragmatic listener *L<sub>1</sub>* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S<sub>1</sub>*, this probability is proportional to the probability that *S<sub>1</sub>* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
 
-+ The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s)
+	- The pragmatic listener: P<sub>L<sub>1</sub></sub> (s|u) ∝ P<sub>S<sub>1</sub></sub> (u|s) · P(s)
 
-The speaker *S1* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L0*. In other words, *S1* wants to minimize the effort *L0* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S1* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L0*, while bearing in mind the utterance cost, C(u).
+The speaker *S<sub>1</sub>* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L<sub>0</sub>*. In other words, *S<sub>1</sub>* wants to minimize the effort *L<sub>0</sub>* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S<sub>1</sub>* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L<sub>0</sub>*, while bearing in mind the utterance cost, C(u).
 
-Speakers act in accordance with the speaker’s utility function *US1*: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
+Speakers act in accordance with the speaker’s utility function *US<sub>1</sub>*: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
 
-The speaker’s utility function: US1(u;s) = logL0(s|u)−C(u)
+	- The speaker’s utility function: U<sub>S<sub>1</sub></sub>(u;s) = logL<sub>0</sub>(s|u)−C(u)
 
-With this utility function in mind, *S1* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US1*. The term $α > 0$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (α corresponds to the temperature parameter of S1’s soft-max optimization.)
+With this utility function in mind, *S<sub>1</sub>* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US<sub>1</sub>*. The term $α > 0$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (α corresponds to the temperature parameter of S<sub>1</sub>’s soft-max optimization.)
 
-The pragmatic speaker: PS1(u|s)∝exp(αUS1(u;s))
+	- The pragmatic speaker: P<sub>S<sub>1</sub></sub>(u|s) ∝ exp(αU<sub>S<sub>1</sub></sub>(u;s))
 
-At the base of this reasoning, the naive, literal listener *L0* interprets an utterance according to its meaning. That is, *L0* computes the probability of *s* given *u* according to the semantics of *u* and the prior probability of *s*. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
+At the base of this reasoning, the naive, literal listener *L<sub>0</sub>* interprets an utterance according to its meaning. That is, *L<sub>0</sub>* computes the probability of *s* given *u* according to the semantics of *u* and the prior probability of *s*. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
 
-The literal listener: PL0 (s|u) ∝ [[u]](s) · P(s)
+	- The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)
 
-Within the RSA framework, communication is thus modeled as in Fig. 8, where L1 reasons about S1’s reasoning about a hypothetical L0.
+Within the RSA framework, communication is thus modeled as in Fig. 8, where L<sub>1</sub> reasons about S<sub>1</sub>’s reasoning about a hypothetical L<sub>0</sub>.
 
-$$L1 pragmatic listener PL1 (s|u) ∝ PS1 (u|s) · P(s)
-S1 pragmaticspeaker PS1(u|s)∝exp(αUS1(u;s))
-L0 literal listener PL0 (s|u) ∝ [[u]](s) · P(s) 
+$$L<sub>1</sub> pragmatic listener PL<sub>1</sub> (s|u) ∝ PS<sub>1</sub> (u|s) · P(s)
+S<sub>1</sub> pragmaticspeaker PS<sub>1</sub>(u|s)∝exp(αUS<sub>1</sub>(u;s))
+L<sub>0</sub> literal listener PL<sub>0</sub> (s|u) ∝ [[u]](s) · P(s) 
 Figure 8 Graphical representation of the Bayesian RSA model.$$
 
-In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 9. Suppose a speaker wants to signal an object, but only has a single word with which to do so. Applying the RSA model schematized in Fig. 8 to the communication scenario in Fig. 9, the speaker S1 chooses a word *u* to best signal an object *s* to a literal listener *L0*, who interprets *u* in proportion to the prior probability of naming objects in the scenario (i.e., to an object’s salience, $P(s)$). The pragmatic listener *L1* reasons about the speaker’s reasoning, and interprets *u* accordingly. By formalizing the contributions of salience and efficiency, the RSA framework provides an information-theoretic definition of informativeness in pragmatic inference. <!-- This definition will prove crucial in understanding the contribution of contextual pre- dictability of collective properties in the interpretation of plural predication. -->
+In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 9. Suppose a speaker wants to signal an object, but only has a single word with which to do so. Applying the RSA model schematized in Fig. 8 to the communication scenario in Fig. 9, the speaker S<sub>1</sub> chooses a word *u* to best signal an object *s* to a literal listener *L<sub>0</sub>*, who interprets *u* in proportion to the prior probability of naming objects in the scenario (i.e., to an object’s salience, P(s)). The pragmatic listener *L<sub>1</sub>* reasons about the speaker’s reasoning, and interprets *u* accordingly. By formalizing the contributions of salience and efficiency, the RSA framework provides an information-theoretic definition of informativeness in pragmatic inference. <!-- This definition will prove crucial in understanding the contribution of contextual pre- dictability of collective properties in the interpretation of plural predication. -->
 
 ~~~~
 // Here is the code from the Frank and Goodman RSA model
@@ -79,9 +79,9 @@ var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
     var utt = uniformDraw(utterances)
-    var L0 = literalListener(utt)
-    // condition (L0 == world)
-    factor(L0.score(world)) // alpha * log p(w | u)
+    var L<sub>0</sub> = literalListener(utt)
+    // condition (L<sub>0</sub> == world)
+    factor(L<sub>0</sub>.score(world)) // alpha * log p(w | u)
     return utt
   })
 }
