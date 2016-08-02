@@ -23,7 +23,7 @@ The speaker *S<sub>1</sub>* desires to choose an utterance *u* that would most e
 
 Speakers act in accordance with the speaker’s utility function *U<sub>S<sub>1</sub></sub>*: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
 
- <center>The speaker’s utility function: U<sub>S<sub>1</sub></sub>(u;s) = *log*(L<sub>0</sub>(s|u)) − C(u)</center>
+ <center>The speaker’s utility function: U<sub>S<sub>1</sub></sub>(u;s) = log(L<sub>0</sub>(s|u)) − C(u)</center>
 
 With this utility function in mind, *S<sub>1</sub>* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US<sub>1</sub>*. The term *α > 0* controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (*α* corresponds to the temperature parameter of S<sub>1</sub>’s soft-max optimization.)
 
