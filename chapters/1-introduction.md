@@ -17,38 +17,21 @@ The Rational Speech-Act (RSA) framework views communication as recursive reasoni
 
 In more detail, the pragmatic listener *L1* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S1*, this probability is proportional to the probability that *S1* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
 
-$$
-\begin{align*}
-  & \phi(x,y) = \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right)
-  = \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j) = \\
-  & (x_1, \ldots, x_n) \left( \begin{array}{ccc}
-      \phi(e_1, e_1) & \cdots & \phi(e_1, e_n) \\
-      \vdots & \ddots & \vdots \\
-      \phi(e_n, e_1) & \cdots & \phi(e_n, e_n)
-    \end{array} \right)
-  \left( \begin{array}{c}
-      y_1 \\
-      \vdots \\
-      y_n
-    \end{array} \right)
-\end{align*}
-$$
+The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s)
 
-$$ The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s) $$
-
-The speaker *S1* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L0*. In other words, *S1* wants to minimize the effort *L0* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S1* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L0*, while bearing in mind the utterance cost, $$C(u)$$.
+The speaker *S1* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L0*. In other words, *S1* wants to minimize the effort *L0* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S1* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L0*, while bearing in mind the utterance cost, C(u).
 
 Speakers act in accordance with the speaker’s utility function *US1*: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
 
-$$The speaker’s utility function: US1(u;s) = logL0(s|u)−C(u)$$
+The speaker’s utility function: US1(u;s) = logL0(s|u)−C(u)
 
 With this utility function in mind, *S1* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *US1*. The term $α > 0$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (α corresponds to the temperature parameter of S1’s soft-max optimization.)
 
-$$The pragmatic speaker: PS1(u|s)∝exp(αUS1(u;s))$$
+The pragmatic speaker: PS1(u|s)∝exp(αUS1(u;s))
 
 At the base of this reasoning, the naive, literal listener *L0* interprets an utterance according to its meaning. That is, *L0* computes the probability of *s* given *u* according to the semantics of *u* and the prior probability of *s*. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
 
-$$The literal listener: PL0 (s|u) ∝ [[u]](s) · P(s)$$
+The literal listener: PL0 (s|u) ∝ [[u]](s) · P(s)
 
 Within the RSA framework, communication is thus modeled as in Fig. 8, where L1 reasons about S1’s reasoning about a hypothetical L0.
 
