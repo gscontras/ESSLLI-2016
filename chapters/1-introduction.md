@@ -17,7 +17,7 @@ The Rational Speech-Act (RSA) framework views communication as recursive reasoni
 
 In more detail, the pragmatic listener *L1* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S1*, this probability is proportional to the probability that *S1* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
 
-$$The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s)$$
+$$ The pragmatic listener: PL1 (s|u) ∝ PS1 (u|s) · P(s) $$
 
 The speaker *S1* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L0*. In other words, *S1* wants to minimize the effort *L0* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S1* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L0*, while bearing in mind the utterance cost, $$C(u)$$.
 
