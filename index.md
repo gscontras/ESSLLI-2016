@@ -4,9 +4,9 @@ layout: default
 
 ## Composition in Probabilistic Language Understanding
 
-**Greg Scontras** -- *g.scontras@uci.edu*
+**Greg Scontras** -- [*g.scontras@uci.edu*](mailto:g.scontras@uci.edu)
 
-**Michael Henry Tessler** -- *mtessler@stanford.edu*
+**Michael Henry Tessler** -- [*mtessler@stanford.edu*](mailto:mtessler@stanford.edu)
 
   - Area: *Language and Logic*
   - Level: *Advanced*

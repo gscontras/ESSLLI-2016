@@ -232,9 +232,9 @@ var pragmaticListener = cache(function(access,utt) {
   })
 });
 
-print("literal listener for a partial-access speaker:")
+print("pragmatic listener for a partial-access speaker:")
 viz.auto(pragmaticListener([true,true,false],'some'))
-print("literal listener for a full-access speaker:")
+print("pragmatic listener for a full-access speaker:")
 viz.auto(pragmaticListener([true,true,true],'some'))
 
 ~~~~
