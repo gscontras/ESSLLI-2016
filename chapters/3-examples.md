@@ -90,4 +90,4 @@ viz.hist(listener("all-not"));
 
 ~~~~
 
-Here we link to the [next chapter](4-composition.html).
+Here we link to the [next chapter](4-ontology.html).

@@ -23,4 +23,4 @@ description: "How to model linguistic material"
 ~~~~
 
 
-Here we link to the [next chapter](5-ambiguity.html).
+Here we link to the [next chapter](5-predication.html).
