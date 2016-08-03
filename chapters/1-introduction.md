@@ -25,7 +25,6 @@ var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = worldPrior();
-    <!-- var s1 = speaker(world) -->
     factor(speaker(world).score(utterance))
     return world
   })
