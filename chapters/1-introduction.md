@@ -17,7 +17,20 @@ The Rational Speech-Act (RSA) framework views communication as recursive reasoni
 
 In more detail, the pragmatic listener *L<sub>1</sub>* computes the probability of a state *s* given some utterance *u*. By reasoning about the speaker *S<sub>1</sub>*, this probability is proportional to the probability that *S<sub>1</sub>* would choose to utter *u* to communicate about the state *s*, together with the prior probability of *s* itself.
 
- <center>The pragmatic listener: P<sub>L<sub>1</sub></sub>(s|u) ∝ P<sub>S<sub>1</sub></sub>(u|s) · P(s)</center>
+<center>The pragmatic listener: P<sub>L<sub>1</sub></sub>(s|u) ∝ P<sub>S<sub>1</sub></sub>(u|s) · P(s)</center>
+
+~~~~
+// pragmatic listener
+var pragmaticListener = function(utterance){
+  Infer({method:"enumerate"},
+        function(){
+    var world = worldPrior();
+    <!-- var s1 = speaker(world) -->
+    factor(speaker(world).score(utterance))
+    return world
+  })
+}
+~~~~
 
 The speaker *S<sub>1</sub>* desires to choose an utterance *u* that would most effectively communicate some state *s* to a hypothesized literal listener *L<sub>0</sub>*. In other words, *S<sub>1</sub>* wants to minimize the effort *L<sub>0</sub>* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S<sub>1</sub>* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L<sub>0</sub>*, while bearing in mind the utterance cost, C(u).
 
@@ -29,9 +42,33 @@ With this utility function in mind, *S<sub>1</sub>* computes the probability of 
 
 <center>The pragmatic speaker: P<sub>S<sub>1</sub></sub>(u|s) ∝ exp(αU<sub>S<sub>1</sub></sub>(u;s))</center>
 
+~~~~
+// pragmatic speaker
+var speaker = function(world){
+  Infer({method:"enumerate"},
+        function(){
+    var utterance = utterancePrior();
+    factor(literalListener(utterance).score(world))
+    return utterance
+  })
+}
+~~~~
+
 At the base of this reasoning, the naive, literal listener *L<sub>0</sub>* interprets an utterance according to its meaning. That is, *L<sub>0</sub>* computes the probability of *s* given *u* according to the semantics of *u* and the prior probability of *s*. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
 
 <center>The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)</center>
+
+~~~~
+// literal listener
+var literalListener = function(utterance){
+  Infer({method:"enumerate"},
+        function(){
+    var world = worldPrior();
+    condition(meaning(utterance, world))
+    return world
+  })
+}
+~~~~
 
 Within the RSA framework, communication is thus modeled as in Fig. 1, where L<sub>1</sub> reasons about S<sub>1</sub>’s reasoning about a hypothetical L<sub>0</sub>.
 
@@ -59,20 +96,20 @@ var worlds = [
 var utterances = ["blue","green","square","circle"]
 
 // meaning funtion to interpret the utterances
-var meaning = function(u, w){
-  return u == "blue" ? u==w.color :
-  u == "green" ? u==w.color :
-  u == "circle" ? u==w.obj :
-  u == "square" ? u==w.obj :
+var meaning = function(utterance, world){
+  return utterance == "blue" ? utterance==world.color :
+  utterance == "green" ? utterance==world.color :
+  utterance == "circle" ? utterance==world.obj :
+  utterance == "square" ? utterance==world.obj :
   true
 }
 
 // literal listener
-var literalListener = function(utt){
+var literalListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = uniformDraw(worlds)
-    condition(meaning(utt, world))
+    condition(meaning(utterance, world))
     return world
   })
 }
@@ -81,21 +118,19 @@ var literalListener = function(utt){
 var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
-    var utt = uniformDraw(utterances)
-    var L<sub>0</sub> = literalListener(utt)
-    // condition (L<sub>0</sub> == world)
-    factor(L<sub>0</sub>.score(world)) // alpha * log p(w | u)
-    return utt
+    var utterance = uniformDraw(utterances)
+    factor(literalListener(utterance).score(world))
+    return utterance
   })
 }
 
 // pragmatic listener
-var pragmaticListener = function(utt){
+var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = uniformDraw(worlds)
-    var s1 = speaker(world)
-    factor(5*s1.score(utt))
+<!--     var s1 = speaker(world) -->
+    factor(speaker(world).score(utterance))
     return world
   })
 }
