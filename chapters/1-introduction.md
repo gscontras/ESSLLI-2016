@@ -129,7 +129,6 @@ var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = uniformDraw(worlds)
-<!--     var s1 = speaker(world) -->
     factor(speaker(world).score(utterance))
     return world
   })
