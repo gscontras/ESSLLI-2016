@@ -6,9 +6,14 @@ description: "Jointly inferring parameters and interpretations"
 
 ### Day 3: Jointly inferring parameters and interpretations
 
-  - Scope phenomena as uncertainty
+<!--   - Scope phenomena as uncertainty
   - Quantification and inference
-  - Rational domain restriction
+  - Rational domain restriction -->
+
+In the last chapter, we looked at a model of semantic parsing in probablistic language understanding built on combinatory categorial grammar. The model constructed literal interpretations and verifying worlds from the semantic atoms of sentences. However, whereas the model explicitly targeted comositional semantics, it stopped at the level of the literal listener, the base of RSA reasoning. Next, we consider a different approach to approximating compositional semantics within the RSA framework.
+
+What we want is a way for our models of language understanding to target sub-propositional aspects of meaning. We might wind up going the route of the fully-compositional but admittedly-unwieldy CCG semantic parser, but for present purposes an easier path presents itself: parameterizing our meaning function so that conversational agents can reason jointly over interpretations and the parameters that fix them. To see how this move serves our aims, consider the case of quantifier scope ambiguities.
+
 
 ~~~~
 // Here is the code for the quantifier scope model
@@ -89,5 +94,8 @@ var listener = cache(function(utterance) {
 viz.hist(listener("all-not"));
 
 ~~~~
+
+
+
 
 Here we link to the [next chapter](4-ontology.html).
