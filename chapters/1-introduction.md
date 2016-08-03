@@ -74,6 +74,9 @@ Within the RSA framework, communication is thus modeled as in Fig. 1, where L<su
 <img src="../images/rsa_schema.pdf" alt="Fig. 1: Graphical representation of the Bayesian RSA model." style="width: 400px;"/>
 <center>Fig. 1: Bayesian RSA schema.</center>
 
+
+#### Application 1: Simple referential communication
+
 In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 2. 
 
 <img src="../images/rsa_scene.pdf" alt="Fig. 2: Example referential communication scenario from Frank & Goodman (2012). Speakers choose a single word, *u*, to signal an object, *s*." style="width: 400px;"/>
@@ -142,11 +145,12 @@ viz.table(pragmaticListener("blue"))
 
 ~~~~
 
-XXX something about scalar implicature
-Goodman and Stuhlmüller (2013) basic Scalar Implicature model:
+#### Application 2: Scalar implicature
+
+Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. Goodman and Stuhlmüller (2013) apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated:
 
 ~~~~
-// Here is the code from the Goodman and Stuhlmüller basic SI model
+// Here is the code from the basic scalar implicature model
 
 // speaker optimality parameter
 var alpha = 2;
@@ -204,7 +208,7 @@ viz.auto(pragmaticListener('some'));
 
 ~~~~
 
-Goodman and Stuhlmüller (2013) speaker-access Scalar Implicature model:
+Capturing scalar implicature within the RSA framework might not set off waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller propose taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world. The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, he knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (the speaker doesn't have the evidence to back it up).
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
