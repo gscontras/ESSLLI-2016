@@ -281,6 +281,6 @@ map(print_graph, items);
 ///
 ~~~~
 
- While these "lifted-variable" RSA models do no model semantic composition explicitly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmatics.
+ While these "lifted-variable" RSA models do no model semantic composition directly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmaticsl; and by formalizing and thereby isolating the contributions of pragmatics, we may more accurately access the semantics.
 
 Here we link to the [next chapter](4-ontology.html).
