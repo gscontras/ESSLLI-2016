@@ -154,7 +154,7 @@ Sometimes our words themselves are imprecise, vague, and heavily dependent on co
 
 [Lassiter and Goodman (2013)](../papers/lassitergoodman2013.pdf) propose 
 
-In text citation? Ref:dippl who knows..
+In text citation? reft:dippl who knows..
 
 ~~~~
 ///fold:
