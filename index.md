@@ -42,4 +42,4 @@ The present course serves to demonstrate that this semantic leveling is unnecess
 
 - [Probabilistic Models of Cognition](https://probmods.org): An introduction to computational cognitive science and the probabilistic programming language Church
 - [The Design and Implementation of Probabilistic Programming Languages](http://dippl.org): An introduction to probabilistic programming languages, WebPPL in particular
-- [Forest](http://forestdb.org)): A Repository for probabilistic models
+- [Forest](http://forestdb.org): A Repository for probabilistic models
