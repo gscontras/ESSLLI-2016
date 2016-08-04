@@ -112,6 +112,13 @@ function short_authors(authorsString) {
   }
 }
 
+function cite_url(citation) {
+  if (citation["URL"]) {
+    return citation["URL"];
+  }
+  return 'https://scholar.google.com/scholar?q="' + citation["TITLE"] + '"';
+}
+
 function format_reft(citation) {
   var s = "";
   s += "<a class='ref' href='" + cite_url(citation) + "'>";
