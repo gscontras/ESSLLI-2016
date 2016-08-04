@@ -208,7 +208,7 @@ viz.auto(pragmaticListener('some'));
 
 ~~~~
 
-Capturing scalar implicature within the RSA framework might not set off waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller propose taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world. The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, he knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (the speaker doesn't have the evidence to back it up).
+Capturing scalar implicature within the RSA framework might not induce waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller propose taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world. The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, he knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because she knows that the speaker doesn't have the evidence to back up the strengthened meaning).
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
