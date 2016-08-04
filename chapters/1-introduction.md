@@ -77,10 +77,10 @@ Within the RSA framework, communication is thus modeled as in Fig. 1, where L<su
 
 #### Application 1: Simple referential communication
 
-In its initial formulation, [Frank and Goodman (2012)](../papers/frankgoodman2012.pdf) use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 2. 
+In its initial formulation, reft:frankgoodman2012 use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 2. 
 
 <img src="../images/rsa_scene.pdf" alt="Fig. 2: Example referential communication scenario from Frank & Goodman (2012). Speakers choose a single word, *u*, to signal an object, *s*." style="width: 400px;"/>
-<center>Fig. 2: Example referential communication scenario from Frank & Goodman (2012). Speakers choose a single word, <i>u</i>, to signal an object, <i>s</i>.</center>
+<center>Fig. 2: Example referential communication scenario from Frank and Goodman. Speakers choose a single word, <i>u</i>, to signal an object, <i>s</i>.</center>
 
 Suppose a speaker wants to signal an object, but only has a single word with which to do so. Applying the RSA model schematized in Fig. 1 to the communication scenario in Fig. 2, the speaker *S<sub>1</sub>* chooses a word *u* to best signal an object *s* to a literal listener *L<sub>0</sub>*, who interprets *u* in proportion to the prior probability of naming objects in the scenario (i.e., to an object’s salience, P(s)). The pragmatic listener *L<sub>1</sub>* reasons about the speaker’s reasoning, and interprets *u* accordingly. By formalizing the contributions of salience and efficiency, the RSA framework provides an information-theoretic definition of informativeness in pragmatic inference. <!-- This definition will prove crucial in understanding the contribution of contextual pre- dictability of collective properties in the interpretation of plural predication. -->
 
@@ -147,7 +147,7 @@ viz.table(pragmaticListener("blue"))
 
 #### Application 2: Scalar implicature
 
-Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. Goodman and Stuhlmüller (2013) apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated:
+Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated:
 
 ~~~~
 // Here is the code from the basic scalar implicature model
@@ -210,8 +210,8 @@ viz.auto(pragmaticListener('some'));
 
 Capturing scalar implicature within the RSA framework might not induce waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller propose taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world (Fig. 3). 
 
-<img src="../images/scalar.png" alt="Fig. 2: Example referential communication scenario from Frank & Goodman (2012). Speakers choose a single word, *u*, to signal an object, *s*." style="width: 500px;"/>
-<center>Fig. 3: Example communication scenario from Goodman and Stuhmüller (2013): How will the listener interpret the speaker’s utter- ance? How will this change if she knows that he can see only two of the objects?.</center>
+<img src="../images/scalar.png" alt="Fig. 3: Example communication scenario from Goodman and Stuhmüller." style="width: 500px;"/>
+<center>Fig. 3: Example communication scenario from Goodman and Stuhmüller: How will the listener interpret the speaker’s utterance? How will this change if she knows that he can see only two of the objects?.</center>
 
 
 The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, he knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because she knows that the speaker doesn't have the evidence to back up the strengthened meaning).
