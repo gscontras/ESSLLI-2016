@@ -150,16 +150,14 @@ viz.hist(listener("all-not"));
 
 #### Application 2: Gradable adjectives and vagueness resolution
 
-Sometimes our words themselves are imprecise, vague, and heavily dependent on context to fix their interpretations. Compositionality assumes semantic atoms with invariant meanings; context-dependent word interpretations pose a serious challenge to compositionality. Take the case of gradable adjectives: "tall for a boy" means something quite different from "tall for a building." What, then, do we make of the contribution from the word "tall"? Semanticists settle on the least common denominator: a threshold semantics by which the adjective asserts that holders of the relevant property surpass some point on the relevant scale (i.e., (*tall* means taller than *d* for some contextually-determined degree of height *d*). Whereas semanticists punt on the mechanism by which context fixes these aspects of meaning, the RSA framework is well-suited to meet the challenge.
+Sometimes our words themselves are imprecise, vague, and heavily dependent on context to fix their interpretations. Compositionality assumes semantic atoms with invariant meanings; context-dependent word interpretations pose a serious challenge to compositionality. Take the case of gradable adjectives: "expensive for a sweater" means something quite different from "expensive for a laptop." What, then, do we make of the contribution from the word "expensive"? Semanticists settle on the least common denominator: a threshold semantics by which the adjective asserts that holders of the relevant property surpass some point on the relevant scale (i.e., *expensive* means more expensive than *d* for some contextually-determined degree of price *d*). Whereas semanticists punt on the mechanism by which context fixes these aspects of meaning, the RSA framework is well-suited to meet the challenge.
 
-reft:lassitergoodman2013 propose 
-
-In text citation? refp:dippl who knows..
+reft:lassitergoodman2013 propose we parameterize the meaning function for sentences containing gradable adjectives so that their interpretations are underspecified. This interpretation-fixing parameter, the gradable threshold value *theta* (i.e., a degree), is something that conversational participants can use their prior knowledge to actively reason about and set. As with the ambiguity-resolving variable above, *theta* gets lifted to the level of the pragmatic listener, who jointly infers the gradable threshold (e.g., the point at which elements of the relevant domain count as expensive) and the true state (e.g., the indicated element's price). Rather than assume prior knowledge (e.g., knowledge about domain-specific prices), Lassiter and Goodman measure it, then feed these measurements into the model as facts about the world.
 
 ~~~~
 ///fold:
 // "price" refers to the midpoint of the bin that participants marked a slider for
-// "probability" refers to the average of participants responses, after normalizing responses for each person for each item.
+// "probability" refers to the average of participants' responses, after normalizing responses for each person for each item
 var coffee = {
   "prices": [2, 6, 10, 14, 18, 22, 26, 30, 34, 38, 42, 46, 50, 54, 58, 62, 66, 70, 74, 78, 82, 86, 90, 94, 98, 102, 106, 110, 114, 118, 122, 126, 130, 134, 138, 142, 146, 150, 154, 158, 162, 166, 170, 174, 178, 182, 186, 190, 194, 198, 202, 206, 210, 214, 218, 222, 226, 230, 234, 238, 242, 246, 250, 254, 258, 262, 266, 270],
   "probabilities": [0.00394425443541116, 0.00566290387321734, 0.00825676850536135, 0.0128170636252316, 0.016825062585583, 0.0252551834871954, 0.028468923991368, 0.0287662881619652, 0.0282906782393822, 0.0298574213919862, 0.0289804109562303, 0.0294934077950995, 0.0282267499972963, 0.027150810280172, 0.0263590035097067, 0.0281826763029633, 0.0279055635543465, 0.0278411275661919, 0.0278729305091271, 0.0260779123427457, 0.025504052957576, 0.0244726498427457, 0.0245886104865853, 0.0244622094919612, 0.0245026711395991, 0.0215246465554349, 0.018590665797836, 0.0178546907780941, 0.0171993717256383, 0.0162494284404094, 0.0160224797974072, 0.0153063570140879, 0.0146233597944038, 0.0137848051705444, 0.0143326737593802, 0.0134490255028661, 0.0135790032064503, 0.0138226943563312, 0.0131925119561275, 0.0126370445876965, 0.0106890591752964, 0.0106020628239155, 0.0101185949533398, 0.00911819843666944, 0.0106104999317876, 0.0109322919246626, 0.0107129834142186, 0.00837168284710854, 0.0080750721559225, 0.00804082264332751, 0.0067313619453682, 0.00627460791368519, 0.00589113687110393, 0.00540523790626922, 0.00552727879179031, 0.00550309276614945, 0.00523220007943591, 0.00511881990396121, 0.00512531318796172, 0.00518250532794681, 0.00363644079549071, 0.00358121922955672, 0.00340485508432679, 0.00300204070158435, 0.00285900767263514, 0.00307193123371249, 0.00265238954722026, 0.00259519926379722]
@@ -285,9 +283,3 @@ map(print_graph, items);
 
 
 Here we link to the [next chapter](4-ontology.html).
-
-#### References:
-
-- cite:lassitergoodman2013
-- cite:may1977
-- cite:montague1973
