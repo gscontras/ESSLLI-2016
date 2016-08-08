@@ -304,4 +304,116 @@ viz.auto(pragmaticListener([true,true,true],'some'))
 ~~~~
 
 
+
+
+
+~~~~
+// Here is the code from the Kao et al. hyperbole model
+
+// Define list of kettle prices under consideration (possible price states)
+var states = [50, 51, 500, 501, 1000, 1001, 5000, 5001, 10000, 10001];
+
+// Prior probability of kettle prices (taken from human experiments)
+var statePrior = function() {
+  return categorical([0.4205, 0.3865, 0.0533, 0.0538, 0.0223, 0.0211, 0.0112, 0.0111, 0.0083, 0.0120],
+                     states)
+};
+
+// Probability that given a price state, the speaker thinks it's too
+// expensive (taken from human experiments)
+var valencePrior = function(state) {
+  var probs = {
+    50 : 0.3173,
+    51 : 0.3173, 
+    500 : 0.7920,
+    501 : 0.7920, 
+    1000 : 0.8933,
+    1001 : 0.8933,
+    5000 : 0.9524,
+    5001 : 0.9524,
+    10000 : 0.9864,
+    10001 : 0.9864
+  }
+  var tf = flip(probs[state]);
+  return tf //? 1 : 0
+};
+
+// Prior over QUDs 
+var qudPrior = function() {
+  return categorical([0.17, 0.32, 0.17, 0.17, 0.17],
+                     ["s", "v", "sv", "as", "asv"])
+};
+
+var qudFns = {
+  s : function(state, valence) {return state},
+  v : function(state, valence) {return valence},
+  sv : function(state, valence) {return [state, valence]},
+  as : function(state, valence) {return approx(state, 10)},
+  asv : function(state, valence) {return [approx(state, 10), valence]}
+};
+
+// Round x to nearest multiple of b (used for approximate interpretation):
+var approx = function(x,b) {
+  return b * Math.round(x / b)
+};
+
+// Define list of possible utterances (same as price states)
+var utterances = states;
+
+// Precise numbers are costlier
+var utterancePrior = function() {
+  categorical([0.18, 0.1, 0.18, 0.1, 0.18, 0.1, 0.18, 0.1, 0.18, 0.1],
+              utterances)
+};
+
+// Literal interpretation "meaning" function; checks if uttered number
+// reflects price state
+var meaning = function(utterance, state) {
+  return utterance == state;
+};
+
+// Literal listener, infers the qud value assuming the utterance is 
+// true of the state
+var literalListener = cache(function(utterance, qud) {
+  return Infer({method : "enumerate"},
+               function() {
+    var state = statePrior()
+    var valence = valencePrior(state)
+    var qudFn = qudFns[qud]
+    condition(meaning(utterance,state))
+    return qudFn(state,valence)
+  })
+});
+
+// Speaker, chooses an utterance to convey a particular value of the qud
+var speaker = cache(function(qValue, qud) {
+  return Infer({method : "enumerate"},
+               function() {
+    var utterance = utterancePrior()
+    factor(literalListener(utterance,qud).score(qValue))
+    return utterance
+  })
+});
+
+// Pragmatic listener, jointly infers the price state, speaker valence, and QUD
+var pragmaticListener = cache(function(utterance) {
+  return Infer({method : "enumerate"},
+               function() {
+    var state = statePrior()
+    var valence = valencePrior(state)
+    var qud = qudPrior()
+    var qudFn = qudFns[qud]
+    var qValue = qudFn(state, valence)
+    factor(speaker(qValue, qud).score(utterance))
+    return {state : state, valence : valence}
+  })
+});
+
+print("Pragmatic listener's interpretation of '$10,000':")
+viz.auto(pragmaticListener(10000))
+
+~~~~
+
+
+
 Here we link to the [next chapter](2-parser.html).
