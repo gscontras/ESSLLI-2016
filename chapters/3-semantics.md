@@ -4,7 +4,7 @@ title: Combining RSA and compositional semantics
 description: "Jointly inferring parameters and interpretations"
 ---
 
-### Day 3: Modeling semantics
+### Day 3: Modeling (or approximating) semantics
 
 <!--   - Scope phenomena as uncertainty
   - Quantification and inference

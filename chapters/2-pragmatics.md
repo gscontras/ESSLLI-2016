@@ -4,14 +4,14 @@ title: Modeling pragmatic inference
 description: "Enriching the literal interpretations"
 ---
 
-### Day 2: Modeling pragmatic inference
+### Day 2: Reasoning about conversational participants and their utterances
 
 <!--   - Building the literal interpretations
   - Compositional mechanisms and semantic types
     - Functional Application; Predicate Modification 
   - The compositional semantics example from DIPPL -->
 
-#### Application 2: Scalar implicature
+#### Scalar implicature
 
 Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated:
 
@@ -169,7 +169,7 @@ viz.auto(pragmaticListener([true,true,true],'some'))
 
 ~~~~
 
-
+#### Hyperbole and the Question Under Discussion
 
 
 

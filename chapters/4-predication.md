@@ -1,10 +1,10 @@
 ---
 layout: chapter
-title: Taking stock and moving forward
+title: Synthesizing extant models
 description: "Toward *a* model of predication"
 ---
 
-### Day 5: Modeling predication
+### Day 4: Modeling predication
 
 "If semantics exists, it must say something about the meaning of predicative expressions (properties) and their nexus to subjects (predication)." -- [Chierchia 1985](http://www.jstor.org/stable/4178443)
 

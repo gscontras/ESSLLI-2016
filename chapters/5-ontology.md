@@ -4,7 +4,7 @@ title: Rethinking the ontology
 description: "How to model linguistic material"
 ---
 
-### Day 4: Representing nouns, verbs, and modifiers
+### Day 5: Representing nouns, verbs, and modifiers
 
   - Implications of the type distinctions 
   - Nouns as distributions
@@ -22,5 +22,3 @@ description: "How to model linguistic material"
 
 ~~~~
 
-
-Here we link to the [next chapter](5-predication.html).

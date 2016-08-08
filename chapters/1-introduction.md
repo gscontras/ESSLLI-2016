@@ -1,6 +1,6 @@
 ---
 layout: chapter
-title: Introducing the Rational Speech-Acts framework
+title: Introducing the Rational Speech-Act framework
 description: "An introduction to language understanding as Bayesian inference"
 ---
 
