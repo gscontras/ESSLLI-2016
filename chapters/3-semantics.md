@@ -4,13 +4,17 @@ title: Combining RSA and compositional semantics
 description: "Jointly inferring parameters and interpretations"
 ---
 
-### Day 3: Jointly inferring parameters and interpretations
+### Day 3: Modeling semantics
 
 <!--   - Scope phenomena as uncertainty
   - Quantification and inference
   - Rational domain restriction -->
 
-In the last chapter, we looked at a model of semantic parsing in probablistic language understanding built on combinatory categorial grammar (CCG). The model constructed literal interpretations and verifying worlds from the semantic atoms of sentences. However, whereas the model explicitly targeted comositional semantics, it stopped at the level of the literal listener, the base of RSA reasoning. Next, we consider a different approach to approximating compositional semantics within the RSA framework.
+
+
+One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; Montague builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them?
+
+So far, the models we have considered operate at the level of full utterances.  These models assume conversational agents who reason over propositional content to arrive at enriched interpretations: "I want the blue one," "Some of the apples are red," "XXX irony," etc. Now, let's approach meaning from the opposite direction: building the literal interpretations (and our model of the world that verifies them) from the bottom up: [semantic parsing](http://dippl.org/examples/semanticparsing.html). The model constructs literal interpretations and verifying worlds from the semantic atoms of sentences. However, whereas the model explicitly targets comositional semantics, it stops at the level of the literal listener, the base of RSA reasoning. Next, we consider a different approach to approximating compositional semantics within the RSA framework.
 
 What we want is a way for our models of language understanding to target sub-propositional aspects of meaning. We might wind up going the route of the fully-compositional but admittedly-unwieldy CCG semantic parser, but for current purposes an easier path presents itself: parameterizing our meaning function so that conversational agents can reason jointly over utterance interpretations and the parameters that fix them. To see how this move serves our aims, we consider two applications.
 
@@ -283,4 +287,4 @@ map(print_graph, items);
 
  While these "lifted-variable" RSA models do no model semantic composition directly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmaticsl; and by formalizing and thereby isolating the contributions of pragmatics, we may more accurately access the semantics.
 
-Here we link to the [next chapter](4-ontology.html).
+Here we link to the [next chapter](4-predication.html).

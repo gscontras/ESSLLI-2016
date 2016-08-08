@@ -4,7 +4,7 @@ title: Taking stock and moving forward
 description: "Toward *a* model of predication"
 ---
 
-### Day 5: Synthesis and outlook
+### Day 5: Modeling predication
 
 "If semantics exists, it must say something about the meaning of predicative expressions (properties) and their nexus to subjects (predication)." -- [Chierchia 1985](http://www.jstor.org/stable/4178443)
 
@@ -50,3 +50,5 @@ All of these may be either singular or plural.
 - Gradable adjectives: John is *tall*
 
 Predicates may ascribe **binary properties**, **gradable properties**, participation in **events**, or **generic** information.
+
+Here we link to the [next chapter](5-ontology.html).
