@@ -149,4 +149,4 @@ viz.table(pragmaticListener("blue"))
 
 
 
-In the [next chapter](2-pragmatics.html), we see how RSA models have been developed to handle paradigmatic and *problem*atic cases from natural langauge pragmatics.
+In the [next chapter](2-pragmatics.html), we'll see how RSA models have been developed to model pragmatic inference.

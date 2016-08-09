@@ -178,7 +178,18 @@ The models we have so far considered strengthen the litereal interpretations of 
 
 If you hear that someone waited "a million years" for a table at a popular restaurant or paid "a thousand dollars" for a coffee at a hipster hangout, you are unlikely to conclude that the improbable literal meanings are true. Instead, you conclude that the diner waited a long time, or paid an exorbitant amount of money, *and that she is frustrated with the experience*. Whereas blue circles are compatible with the literal meaning of "blue," five-dollar coffees are not compatible with the literal meaning of "a thousand dollars." How, then, do we arrive at sensible interpretations when our words are literally false?
 
-reft:kaoetal2014 
+reft:kaoetal2014 propose that we model hyperbole understanding as pragmatic inference. Crucially, they propose that we add to the mix an awareness of **communicative goals**: what Question Under Discussion (QUD) a speaker is likely addressing with their utterance. To capture cases of hyperbole, Kao et al. observe that speakers are likely communicating---at least in part---about their attitude toward a state of the world (i.e., the valence of their *affect*). QUDs are modeled as summaries of the full world states, which take into account both state and valence information:
+
+~~~~
+var qudFns = {
+  s : function(state, valence) {return state},
+  v : function(state, valence) {return valence},
+  sv : function(state, valence) {return [state, valence]},
+  as : function(state, valence) {return approx(state, 10)},
+  asv : function(state, valence) {return [approx(state, 10), valence]}
+};
+~~~~
+
 
 
 ~~~~
