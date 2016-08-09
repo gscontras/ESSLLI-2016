@@ -4,7 +4,7 @@ title: Synthesizing extant models
 description: "Toward *a* model of predication"
 ---
 
-### Day 4: Modeling predication
+### Day 4: Toward *a* model of predication
 
 "If semantics exists, it must say something about the meaning of predicative expressions (properties) and their nexus to subjects (predication)." -- [Chierchia 1985](http://www.jstor.org/stable/4178443)
 
@@ -34,7 +34,7 @@ All of these may be either singular or plural.
 (from [Kehler 2015](http://onlinelibrary.wiley.com/doi/10.1002/9781118882139.ch20/summary))
 
 - Indefinite *a*: Congress passed *a bill* today
-- Indefinite *this*: Congress passed *this bill* today (you won't bleieve what's in it)
+- Indefinite *this*: Congress passed *this bill* today (you won't believe what's in it)
 - Definite *the*-NP: *The bill* cuts tazes for the middle class
 - Familiar *that*: Congress passed *that bill* today [spoken discourse-initially]
 - Demonstratives: *That bill* was pretty bad, but *this one* is downright awful

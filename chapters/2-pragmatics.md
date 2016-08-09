@@ -4,7 +4,7 @@ title: Modeling pragmatic inference
 description: "Enriching the literal interpretations"
 ---
 
-### Day 2: Reasoning about conversational participants and their utterances
+### Day 2: Enriching the literal interpretations
 
 <!--   - Building the literal interpretations
   - Compositional mechanisms and semantic types

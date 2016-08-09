@@ -1,7 +1,7 @@
 ---
 layout: chapter
 title: Rethinking the ontology
-description: "How to model linguistic material"
+description: "Representing nouns, verbs, and modifiers"
 ---
 
 ### Day 5: Representing nouns, verbs, and modifiers
