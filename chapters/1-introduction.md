@@ -150,7 +150,7 @@ viz.table(pragmaticListener("blue"))
 ~~~~
 
 
-
+$$P(s) =x$$
 
 
 In the [next chapter](2-pragmatics.html), we'll see how RSA models have been developed to model more complex cases of language understanding.
