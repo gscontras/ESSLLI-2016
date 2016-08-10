@@ -35,15 +35,11 @@ var literalListener = function(utterance){
 }
 ~~~~
 
-The speaker *S<sub>1</sub>* desires to choose an utterance *u* that would most effectively communicate some state of the world *s* to the hypothesized literal listener *L<sub>0</sub>*. In other words, *S<sub>1</sub>* wants to minimize the effort *L<sub>0</sub>* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S<sub>1</sub>* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L<sub>0</sub>*, while bearing in mind the utterance cost, C(u).
+The speaker *S<sub>1</sub>* desires to choose an utterance *u* that would most effectively communicate some state of the world *s* to the hypothesized literal listener *L<sub>0</sub>*. In other words, *S<sub>1</sub>* wants to minimize the effort *L<sub>0</sub>* would need to arrive at *s* from *u*, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. *S<sub>1</sub>* thus seeks to minimize the surprisal of *s* given *u* for the literal listener *L<sub>0</sub>*, while bearing in mind the utterance cost, $$C(u)$$.
 
 Speakers act in accordance with the speaker’s utility function *U<sub>S<sub>1</sub></sub>*: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
 
- <center>The speaker’s utility function: U<sub>S<sub>1</sub></sub>(u;s) = log(L<sub>0</sub>(s|u)) − C(u)</center>
-
- $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$
-
- test $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$ in line
+ <center>The speaker’s utility function:  $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$</center>
 
 With this utility function in mind, *S<sub>1</sub>* computes the probability of an utterance *u* given some state *s* in proportion to the speaker’s utility function *U<sub>S<sub>1</sub></sub>*. The term *α > 0* controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. (*α* corresponds to the temperature parameter of S<sub>1</sub>’s soft-max optimization.)
 
