@@ -13,7 +13,34 @@ description: "Enriching the literal interpretations"
 
 #### Scalar implicature
 
-Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated:
+Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated.
+
+Assume a world with three apples; zero, one, two, or three of those apples may be red:
+
+~~~~
+// possible states of the world
+var statePrior = function() {
+  return uniformDraw([0, 1, 2, 3]);
+};
+~~~~
+
+Next, assume that speakers may describe the current state of the world in one of three ways:
+
+~~~~
+// possible utterances
+var utterancePrior = function() {
+  return uniformDraw(['all', 'some', 'none']);
+};
+
+// meaning funtion to interpret the utterances
+var literalMeanings = {
+  all: function(state) { return state === 3; },
+  some: function(state) { return state > 0; },
+  none: function(state) { return state === 0; }
+};
+~~~~
+
+With this knowledge about the communcation scenario---crucially, the availability of the "all" alternative utterance---a pragmatic listener is able to infer from the "some" utterance that the "all" utterance describes an unlikely state. In other words, the pragmatic listener strengthens "some" via scalar implicature.
 
 ~~~~
 // Here is the code from the basic scalar implicature model
@@ -80,7 +107,7 @@ Capturing scalar implicature within the RSA framework might not induce waves of 
 <center>Fig. 3: Example communication scenario from Goodman and Stuhmüller: How will the listener interpret the speaker’s utterance? How will this change if she knows that he can see only two of the objects?.</center>
 
 
-The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, he knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because she knows that the speaker doesn't have the evidence to back up the strengthened meaning).
+The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
@@ -344,7 +371,7 @@ viz.auto(pragmaticListener(10000))
 
 ~~~~
 
-By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intended to communicate that the kettle was relatively expensive and that this price was upsetting. The model thus captures some of the most flexible uses of language: what we mean when our utteranes are literally false.
+By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intends to communicate that the kettle price was upsetting. The model thus captures some of the most flexible uses of language: what we mean when our utteranes are literally false.
 
 Both the Scalar Implicature and Hyperbole models operate at the level of full utterances, with conversational participants reasoning about propositions. In the [next chapter](3-semantics.html), we begin to look at what it would take to model reasoning about sub-propositional meaning-bearing elements within the RSA framework.
 
