@@ -344,6 +344,7 @@ viz.auto(pragmaticListener(10000))
 
 ~~~~
 
-By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intended to communicate that the kettle was relatively expensive and that this price was upsetting. 
+By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intended to communicate that the kettle was relatively expensive and that this price was upsetting. The model thus captures some of the most flexible uses of language: what we mean when our utteranes are literally false.
 
-In the [next chapter](3-semantics.html), we consider a different approach to approximating semantic composition within the RSA framework.
+Both the Scalar Implicature and Hyperbole models operate at the level of full utterances, with conversational participants reasoning about propositions. In the [next chapter](3-semantics.html), we begin to look at what it would take to model reasoning about sub-propositional meaning-bearing elements within the RSA framework.
+
