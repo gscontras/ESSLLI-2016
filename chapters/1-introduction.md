@@ -17,9 +17,9 @@ The Rational Speech-Act (RSA) framework views communication as recursive reasoni
 
 At the base of this reasoning, the naive, literal listener *L<sub>0</sub>* interprets an utterance according to its meaning. That is, *L<sub>0</sub>* computes the probability of *s* given *u* according to the semantics of *u* and the prior probability of *s*. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
 
-<center>The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)</center>
+<!-- <center>The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)</center> -->
 
-$$P_{L_{0}}(s\mid u) \propto u(s) \cdot P(s)$$
+$$P_{L_{0}}(s\mid u) \propto [[u]](s) \cdot P(s)$$
 
 <!-- \mid -->
 
