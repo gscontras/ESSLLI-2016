@@ -19,6 +19,10 @@ At the base of this reasoning, the naive, literal listener *L<sub>0</sub>* inter
 
 <center>The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)</center>
 
+$$P_{L_{0}}(s\mid u) \propto u(s) \cdot P(s)$$
+
+<!-- \mid -->
+
 ~~~~
 // literal listener
 var literalListener = function(utterance){
@@ -148,9 +152,6 @@ print("pragmatic listener's interpretation of 'blue':")
 viz.table(pragmaticListener("blue"))
 
 ~~~~
-
-
-$$P(s) =x$$
 
 
 In the [next chapter](2-pragmatics.html), we'll see how RSA models have been developed to model more complex cases of language understanding.
