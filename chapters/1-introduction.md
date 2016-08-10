@@ -79,7 +79,7 @@ var pragmaticListener = function(utterance){
 
 
 
-Within the RSA framework, communication is thus modeled as in Fig. 1, where $$L_{1}$$ reasons about $$s_{1}$$’s reasoning about a hypothetical $$L_{0}$$.
+Within the RSA framework, communication is thus modeled as in Fig. 1, where $$L_{1}$$ reasons about $$S_{1}$$’s reasoning about a hypothetical $$L_{0}$$.
 
 <img src="../images/rsa_schema.pdf" alt="Fig. 1: Graphical representation of the Bayesian RSA model." style="width: 400px;"/>
 <center>Fig. 1: Bayesian RSA schema.</center>
