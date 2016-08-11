@@ -45,7 +45,7 @@ The literal listener *L<sub>0</sub>* has prior uncertainty about the true state,
 
 ~~~~
 // Literal listener (L0)
-var literal = cache(function(utterance,inverse) {
+var literalListener = cache(function(utterance,inverse) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
@@ -59,7 +59,7 @@ The interpretation variable (*inverse*) is lifted, so that it will be actively r
 
 ~~~~
 // Pragmatic listener (L1)
-var listener = cache(function(utterance) {
+var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
@@ -115,7 +115,7 @@ var meaning = function(utterance,state,inverse) {
 };
 
 // Literal listener (L0)
-var literal = cache(function(utterance,inverse,QUD) {
+var literalListener = cache(function(utterance,inverse,QUD) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
@@ -131,13 +131,13 @@ var speaker = cache(function(inverse,state,QUD) {
   function(){
     var utterance = utterancePrior();
     var qState = QUDFun(QUD,state);
-    factor(alpha * literal(utterance,inverse,QUD).score(qState));
+    factor(alpha * literalListener(utterance,inverse,QUD).score(qState));
     return utterance;
   });
 });
 
 // Pragmatic listener (L1)
-var listener = cache(function(utterance) {
+var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
@@ -148,7 +148,7 @@ var listener = cache(function(utterance) {
   });
 });
 
-viz.hist(listener("all-not"));
+viz.hist(pragmaticListener("all-not"));
 
 ~~~~
 
@@ -236,7 +236,7 @@ var meaning = function(utterance, price, theta) {
   }
 };
 
-var literalERP = cache(function(utterance, theta, item) {
+var literalListener = cache(function(utterance, theta, item) {
   var price_prior = prior(item);
   return Enumerate(function() {
     var price = price_prior();
@@ -245,21 +245,21 @@ var literalERP = cache(function(utterance, theta, item) {
   });
 });
 
-var speakerERP = cache(function(price, theta, item) {
+var speaker = cache(function(price, theta, item) {
   return Enumerate(function() {
     var utterance = utterance_prior();
-    factor( alpha * literalERP(utterance, theta, item).score([], price) );
+    factor( alpha * literalListener(utterance, theta, item).score([], price) );
     return utterance;
   });
 });
 
-var listenerERP = function(utterance, item) {
+var pragmaticListener = function(utterance, item) {
   var price_prior = prior(item);
   var theta_prior = theta_prior(item);
   return ParticleFilter(function() {
     var price = price_prior();
     var theta = theta_prior();
-    factor( alpha * speakerERP(price, theta, item).score([], utterance) );
+    factor( alpha * speaker(price, theta, item).score([], utterance) );
     return {
       price: price,
       theta: theta
@@ -275,7 +275,7 @@ var print_graph = function(item) {
     "price_prior": Enumerate(prior(item)),
     "theta_prior": Enumerate(theta_prior(item))
   });
-  vizPrint(listenerERP("expensive", item));
+  vizPrint(pragmaticListener("expensive", item));
 }
 
 var items = ["coffee maker", "headphones", "laptop", "sweater", "watch"];
