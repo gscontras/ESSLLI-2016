@@ -359,7 +359,8 @@ var pragmaticListener = cache(function(utterance) {
     var qudFn = qudFns[qud]
     var qValue = qudFn(state, valence)
     observe(speaker(qValue, qud),utterance)
-    return {state : state, valence : valence}
+    return state
+    //     return {state : state, valence : valence}
   })
 });
 
