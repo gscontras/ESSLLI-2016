@@ -19,7 +19,7 @@ At the base of this reasoning, the naive, literal listener $$L_{0}$$ interprets 
 
 <!-- <center>The literal listener: P<sub>L<sub>0</sub></sub>(s|u) ∝ ⟦u⟧(s) · P(s)</center> -->
 
-$$P_{L_{0}}(s\mid u) \propto [\!\![u]\!\!](s) \cdot P(s)$$
+$$P_{L_{0}}(s\mid u) \propto [\![u]\!](s) \cdot P(s)$$
 
 <!-- \mid -->
 
