@@ -186,10 +186,10 @@ var pragmaticListener = cache(function(access,utt) {
   })
 });
 
-print("pragmatic listener for a partial-access speaker:")
-viz.auto(pragmaticListener([true,true,false],'some'))
 print("pragmatic listener for a full-access speaker:")
 viz.auto(pragmaticListener([true,true,true],'some'))
+print("pragmatic listener for a partial-access speaker:")
+viz.auto(pragmaticListener([true,true,false],'some'))
 
 ~~~~
 
