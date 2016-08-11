@@ -53,7 +53,7 @@ var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
     var utterance = utterancePrior();
-    factor(literalListener(utterance).score(world))
+    observe(literalListener(utterance),world)
     return utterance
   })
 }
@@ -71,7 +71,7 @@ var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = worldPrior();
-    factor(speaker(world).score(utterance))
+    observe(speaker(world),utterance)
     return world
   })
 }
@@ -131,7 +131,7 @@ var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
     var utterance = uniformDraw(utterances)
-    factor(literalListener(utterance).score(world))
+    observe(literalListener(utterance),world)
     return utterance
   })
 }
@@ -141,7 +141,7 @@ var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
     var world = uniformDraw(worlds)
-    factor(speaker(world).score(utterance))
+    observe(speaker(world),utterance)
     return world
   })
 }

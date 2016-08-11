@@ -45,9 +45,6 @@ With this knowledge about the communcation scenario---crucially, the availabilit
 ~~~~
 // Here is the code from the basic scalar implicature model
 
-// speaker optimality parameter
-var alpha = 2;
-
 // possible states of the world
 var statePrior = function() {
   return uniformDraw([0, 1, 2, 3]);
@@ -81,7 +78,7 @@ var speaker = cache(function(state) {
   return Infer({method:"enumerate"},
   function(){
     var utt = utterancePrior();
-    factor(alpha * literalListener(utt).score(state));
+    observe(literalListener(utt),state);
     return utt;
   });
 });
@@ -91,7 +88,7 @@ var pragmaticListener = cache(function(utt) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    factor(speaker(state).score(utt));
+    observe(speaker(state),utt);
     return state;
   })
 });
@@ -166,7 +163,7 @@ var speaker = cache(function(access,state) {
                function(){
     var utt = utterancePrior();
     var beliefState = belief(state,access);
-    factor(literalListener(utt).score(beliefState));
+    observe(literalListener(utt),beliefState);
     return utt;
   });
 });
@@ -184,7 +181,7 @@ var pragmaticListener = cache(function(access,utt) {
   return Infer({method:"enumerate"},
                function(){
     var state = statePrior();
-    factor(speaker(access,state).score(utt));
+    observe(speaker(access,state),utt);
     return numTrue(state);
   })
 });
@@ -239,7 +236,7 @@ var speaker = cache(function(qValue, qud) {
   return Infer({method : "enumerate"},
                function() {
     var utterance = utterancePrior()
-    factor(literalListener(utterance,qud).score(qValue))
+    observe(literalListener(utterance,qud),qValue)
     return utterance
   })
 });
@@ -256,7 +253,7 @@ var pragmaticListener = cache(function(utterance) {
     var qud = qudPrior()
     var qudFn = qudFns[qud]
     var qValue = qudFn(state, valence)
-    factor(speaker(qValue, qud).score(utterance))
+    observe(speaker(qValue, qud),utterance)
     return {state : state, valence : valence}
   })
 });
@@ -347,7 +344,7 @@ var speaker = cache(function(qValue, qud) {
   return Infer({method : "enumerate"},
                function() {
     var utterance = utterancePrior()
-    factor(literalListener(utterance,qud).score(qValue))
+    observe(literalListener(utterance,qud),qValue)
     return utterance
   })
 });
@@ -361,7 +358,7 @@ var pragmaticListener = cache(function(utterance) {
     var qud = qudPrior()
     var qudFn = qudFns[qud]
     var qValue = qudFn(state, valence)
-    factor(speaker(qValue, qud).score(utterance))
+    observe(speaker(qValue, qud),utterance)
     return {state : state, valence : valence}
   })
 });

@@ -64,7 +64,7 @@ var pragmaticListener = cache(function(utterance) {
   function(){
     var state = statePrior();
     var inverse = flip(0.5);
-    factor(speaker(inverse,state).score(utterance));
+    observe(speaker(inverse,state),utterance);
     return [inverse,state];
   });
 });
@@ -75,18 +75,15 @@ The full model also takes into account uncertainty about the question under disc
 ~~~~
 // Here is the code for the quantifier scope model
 
-// speaker optimality
-var alpha = 1;
-
 // possible utterances
 var utterances = ["null","all-not"];
 var cost = function(utterance) {
   return 1;
 };
 var utterancePrior = function() {
-  	return utterances[discrete(map(function(u) {
-  	  return Math.exp(-cost(u));
-  	}, utterances))];
+    return utterances[discrete(map(function(u) {
+      return Math.exp(-cost(u));
+    }, utterances))];
 };
 
 // possible world states
@@ -131,7 +128,7 @@ var speaker = cache(function(inverse,state,QUD) {
   function(){
     var utterance = utterancePrior();
     var qState = QUDFun(QUD,state);
-    factor(alpha * literalListener(utterance,inverse,QUD).score(qState));
+    observe(literalListener(utterance,inverse,QUD),qState);
     return utterance;
   });
 });
@@ -143,12 +140,13 @@ var pragmaticListener = cache(function(utterance) {
     var state = statePrior();
     var inverse = flip(0.5);
     var QUD = QUDPrior();
-    factor(speaker(inverse,state,QUD).score(utterance));
-    return [inverse,state];
+    observe(speaker(inverse,state,QUD),utterance);
+    return state;
+    //     return [state,inverse];
   });
 });
 
-viz.hist(pragmaticListener("all-not"));
+viz.auto(pragmaticListener("all-not"));
 
 ~~~~
 
