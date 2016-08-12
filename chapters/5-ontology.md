@@ -49,7 +49,7 @@ var utterancePrior = function() {
 };  
 
 //meaning function
-var meaning = function(utterance, world, index) {
+var meaning = function(utterance, world) {
   if (utterance=="") return true
   var words = utterance.split(" ")
   var det = words[0]
@@ -75,33 +75,32 @@ var meaning = function(utterance, world, index) {
                       } else {return any(function(x){x[cat] & !x[prop]}, world)
                              }}};
 
-// literal listener infers world given utterance and individual index
-var literalListener = cache(function(utterance, index) {
+// literal listener infers world given utterance
+var literalListener = cache(function(utterance) {
   return Infer({method : "enumerate"},
                function() {
     var world = worldPrior()
-    condition(meaning(utterance, world, index))
+    condition(meaning(utterance, world))
     return world;
   })
 })
 
-// speaker chooses utterance given world and index
-var speaker = cache(function(world, index) {
+// speaker chooses utterance given world
+var speaker = cache(function(world) {
   return Infer({method : "enumerate"},
                function() {
     var utterance = utterancePrior();
-    observe(literalListener(utterance, index),world)
+    observe(literalListener(utterance),world)
     return utterance;
   });
 });
 
-// pragmatic listener infers worl and index given utterance
+// pragmatic listener infers worls given utterance
 var pragmaticListener = cache(function(utterance) {
   return Infer({method : "enumerate"},
                function() {
     var world = worldPrior();
-    var index = randomInteger(world.length)
-    observe(speaker(world, index),utterance)
+    observe(speaker(world),utterance)
     return world
   });
 });
