@@ -16,8 +16,19 @@ Capturing scalar implicature within the RSA framework might not induce waves of 
 <img src="../images/scalar.png" alt="Fig. 3: Example communication scenario from Goodman and Stuhmüller." style="width: 500px;"/>
 <center>Fig. 1: Example communication scenario from Goodman and Stuhmüller: How will the listener interpret the speaker’s utterance? How will this change if she knows that he can see only two of the objects?.</center>
 
+In the extended Scalar Implicature model, the pragmatic listen infers the true state of the world not only on the basis of the observe utterance, but also the speaker's espistemic access $$a$$.
 
-The intuition (which they validate experimentally) is that in cases where the speaker has partial knowledge (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
+$$P_{L_{1}}(s\mid u, a) \propto P_{S_{1}}(u\mid s, a) \cdot P(s)$$
+
+The speaker model is now more complex: the speaker chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
+
+##P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)[U(u; s)]})$$
+
+The speaker's utility function remains unchanged, such that utterances are chosen to minimize cost and maximize informativity.
+
+$$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$
+
+The intuition (which Goodman and Stuhlmüller validate experimentally) is that in cases where the speaker has partial knowledge (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
