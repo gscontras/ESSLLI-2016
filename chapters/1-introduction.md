@@ -63,7 +63,7 @@ The pragmatic listener $$L_{1}$$ computes the probability of a state $$s$$ given
 
 <!-- <center>The pragmatic listener: P<sub>L<sub>1</sub></sub>(s|u) ∝ P<sub>S<sub>1</sub></sub>(u|s) · P(s)</center> -->
 
-$$P_{L_{1}}(s\mid u) \propto P_{S_{1}} \cdot P(s)$$
+$$P_{L_{1}}(s\mid u) \propto P_{S_{1}}(u\mid s) \cdot P(s)$$
 
 ~~~~
 // pragmatic listener
