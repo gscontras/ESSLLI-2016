@@ -32,7 +32,7 @@ var pragmaticListener = cache(function(access,utt) {
 });
 ~~~~
 
-The speaker model is now more complex: the speaker chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
+The speaker model is now more complex: first the speaker makes an observation $$o$$ of the true state $$s$$ with access $$a$$. On the basis of the observation and access, the speaker infers the true state.
 
 ~~~~
 // red apple base rate
@@ -68,6 +68,8 @@ viz.auto(repeat(1000,function() {numTrue(belief([true,true,true],[true,true,fals
 ~~~~
 
 > **Exercise:** Change the red apple base rate.
+
+The speaker then chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
 $$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)}[U(u; s)])$$
 
