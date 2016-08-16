@@ -158,7 +158,10 @@ viz.table(pragmaticListener("blue"))
 
 ~~~~
 
-> **Exercise:** Explore what happens if you make the speaker *more* optimal.
+> **Exercises:** 
+> 1. Explore what happens if you make the speaker *more* optimal.
+> 2. Add another object to the scenario.
+> 3. Add a new multi-word utterance.
 
 #### Scalar implicature
 
