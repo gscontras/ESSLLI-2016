@@ -158,6 +158,7 @@ viz.table(pragmaticListener("blue"))
 
 ~~~~
 
+> **Exercise:** Explore what happens if you make the speaker *more* optimal.
 
 #### Scalar implicature
 
