@@ -163,6 +163,7 @@ viz.table(pragmaticListener("blue"))
 > 1. Explore what happens if you make the speaker *more* optimal.
 > 2. Add another object to the scenario.
 > 3. Add a new multi-word utterance.
+> 4. Check the behavior of the other possible utterances.
 
 #### Scalar implicature
 
@@ -254,6 +255,11 @@ viz.auto(pragmaticListener('some'));
 
 ~~~~
 
+> **Exercises:** 
+
+> 1. Explore what happens if you make the speaker *less* optimal.
+> 2. Add a new utterance.
+> 3. Check what would happen if 'some' literally meant some-but-not-all.
 
 
 In the [next chapter](2-pragmatics.html), we'll see how RSA models have been developed to model more complex aspects of pragmatic reasoning and language understanding.
