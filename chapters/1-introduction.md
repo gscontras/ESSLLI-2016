@@ -53,7 +53,7 @@ var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
     var utterance = utterancePrior();
-    observe(literalListener(utterance),world)
+    factor(alpha * literalListener(utterance).score(world))
     return utterance
   })
 }
@@ -126,12 +126,15 @@ var literalListener = function(utterance){
   })
 }
 
+// set speaker optimality
+var alpha = 1
+
 // pragmatic speaker
 var speaker = function(world){
   Infer({method:"enumerate"},
         function(){
     var utterance = uniformDraw(utterances)
-    observe(literalListener(utterance),world)
+    factor(alpha * literalListener(utterance).score(world))
     return utterance
   })
 }
@@ -158,14 +161,14 @@ viz.table(pragmaticListener("blue"))
 
 #### Scalar implicature
 
-Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mecahnisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated.
+Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mechanisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated.
 
 Assume a world with three apples; zero, one, two, or three of those apples may be red:
 
 ~~~~
 // possible states of the world
 var statePrior = function() {
-  return uniformDraw([0, 1, 2, 3]);
+  return uniformDraw([0, 1, 2, 3])
 };
 ~~~~
 
@@ -192,7 +195,7 @@ With this knowledge about the communcation scenario---crucially, the availabilit
 
 // possible states of the world
 var statePrior = function() {
-  return uniformDraw([0, 1, 2, 3]);
+  return uniformDraw([0, 1, 2, 3])
 };
 
 // possible utterances
@@ -211,30 +214,33 @@ var literalMeanings = {
 var literalListener = cache(function(utt) {
   return Infer({method:"enumerate"},
   function(){
-    var state = statePrior();
-    var meaning = literalMeanings[utt];
-    condition(meaning(state));
-    return state;
+    var state = statePrior()
+    var meaning = literalMeanings[utt]
+    condition(meaning(state))
+    return state
   })
 });
+
+// set speaker optimality
+var alpha = 1
 
 // pragmatic speaker
 var speaker = cache(function(state) {
   return Infer({method:"enumerate"},
   function(){
-    var utt = utterancePrior();
-    observe(literalListener(utt),state);
-    return utt;
-  });
+    var utt = utterancePrior()
+    factor(alpha * literalListener(utt).score(state))
+    return utt
+  })
 });
 
 // pragmatic listener
 var pragmaticListener = cache(function(utt) {
   return Infer({method:"enumerate"},
   function(){
-    var state = statePrior();
-    observe(speaker(state),utt);
-    return state;
+    var state = statePrior()
+    observe(speaker(state),utt)
+    return state
   })
 });
 
