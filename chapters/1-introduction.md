@@ -59,6 +59,45 @@ var speaker = function(world){
 }
 ~~~~
 
+The speaker is an XXX
+
+~~~~
+// definte possible actions
+var actions = ['a1', 'a2', 'a3'];
+
+// define some expected utility for the actions
+var expectedUtility = function(action){
+  var table = { 
+    a1: -1, 
+    a2: 6, 
+    a3: 8
+  };
+  return table[action];
+};
+
+// define speaker optimality
+var alpha = 1
+
+// define a rational agent who choses actions 
+// according to their expected utility
+var softMaxAgent = function(){
+  return Infer({ method: 'enumerate' }, function(){
+    var action = uniformDraw(actions);
+    factor(alpha * expectedUtility(action));
+    return action;
+  })
+};
+
+print("the probability that an agent will take various actions:")
+viz.auto(softMaxAgent());
+
+~~~~
+
+> **Exercises:**
+
+> 1. Explore what happens when you change the speaker's optimality.
+> 2. Explore what happens when you change the expected utilities.
+
 The pragmatic listener $$L_{1}$$ computes the probability of a state $$s$$ given some utterance $$u$$. By reasoning about the speaker $$S_{1}$$, this probability is proportional to the probability that $$S_{1}$$ would choose to utter $$u$$ to communicate about the state $$s$$, together with the prior probability of $$s$$ itself.
 
 <!-- <center>The pragmatic listener: P<sub>L<sub>1</sub></sub>(s|u) ∝ P<sub>S<sub>1</sub></sub>(u|s) · P(s)</center> -->

@@ -63,13 +63,15 @@ var numTrue = function(state) {
 }
 
 print("1000 runs of the speaker's belief function:")
-viz.auto(repeat(1000,function() {numTrue(belief([true,true,true],[true,true,false]))}))
+viz.auto(repeat(1000,function() {
+  numTrue(belief([true,true,true],[true,true,false]))
+}))
 
 ~~~~
 
 > **Exercise:** Change the red apple base rate.
 
-The speaker then chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
+The speaker then chooses an utterance $$u$$ to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
 $$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)}[U(u; s)])$$
 
@@ -90,7 +92,7 @@ The speaker's utility function remains unchanged, such that utterances are chose
 
 $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$
 
-The intuition (which Goodman and Stuhlmüller validate experimentally) is that in cases where the speaker has partial knowledge (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
+The intuition (which Goodman and Stuhlmüller validate experimentally) is that in cases where the speaker has partial knowledge access (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
 
 ~~~~
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
