@@ -20,9 +20,34 @@ In the extended Scalar Implicature model, the pragmatic listen infers the true s
 
 $$P_{L_{1}}(s\mid u, a) \propto P_{S_{1}}(u\mid s, a) \cdot P(s)$$
 
+~~~~
+// pragmatic listener
+var pragmaticListener = cache(function(access,utt) {
+  return Infer({method:"enumerate"},
+               function(){
+    var state = statePrior()
+    observe(speaker(access,state),utt)
+    return numTrue(state)
+  })
+});
+~~~~
+
 The speaker model is now more complex: the speaker chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
 $$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)}[U(u; s)])$$
+
+~~~~
+// pragmatic speaker
+var speaker = cache(function(access,state) {
+  return Infer({method:"enumerate"},
+               function(){
+    var utterance = utterancePrior()
+    var beliefState = belief(state,access)
+    factor(alpha * literalListener(utterance).score(beliefState))
+    return utterance
+  })
+});
+~~~~
 
 The speaker's utility function remains unchanged, such that utterances are chosen to minimize cost and maximize informativity.
 
@@ -38,10 +63,10 @@ var baserate = 0.8
 
 // state builder
 var substatePriors = function() {
-  var s1 = flip(baserate);
-  var s2 = flip(baserate);
-  var s3 = flip(baserate);
-  return [s1,s2,s3];
+  var s1 = flip(baserate)
+  var s2 = flip(baserate)
+  var s3 = flip(baserate)
+  return [s1,s2,s3]
 }
 
 // speaker belief function
@@ -54,12 +79,12 @@ var belief = function(actualState, access) {
 
 // state prior
 var statePrior = function() {
-  return substatePriors();
+  return substatePriors()
 } 
 
 // utterance prior
 var utterancePrior = function() {
-  uniformDraw(['all','some','none']);
+  uniformDraw(['all','some','none'])
 }
 
 // meaning funtion to interpret utterances
@@ -73,39 +98,42 @@ var literalMeanings = {
 var literalListener = cache(function(utt) {
   return Infer({method:"enumerate"},
                function(){
-    var state = statePrior();
-    var meaning = literalMeanings[utt];
-    condition(meaning(state));
-    return state;
+    var state = statePrior()
+    var meaning = literalMeanings[utt]
+    condition(meaning(state))
+    return state
   })
 });
+
+// set speaker optimality
+var alpha = 1
 
 // pragmatic speaker
 var speaker = cache(function(access,state) {
   return Infer({method:"enumerate"},
                function(){
-    var utt = utterancePrior();
-    var beliefState = belief(state,access);
-    observe(literalListener(utt),beliefState);
-    return utt;
-  });
+    var utt = utterancePrior()
+    var beliefState = belief(state,access)
+    factor(alpha * literalListener(utt).score(beliefState))
+    return utt
+  })
 });
 
 // tally up the state
 var numTrue = function(state) {
   var fun = function(x) {
-    x ? 1 : 0;
+    x ? 1 : 0
   }
-  return sum(map(fun,state));
+  return sum(map(fun,state))
 }
 
 // pragmatic listener
 var pragmaticListener = cache(function(access,utt) {
   return Infer({method:"enumerate"},
                function(){
-    var state = statePrior();
-    observe(speaker(access,state),utt);
-    return numTrue(state);
+    var state = statePrior()
+    observe(speaker(access,state),utt)
+    return numTrue(state)
   })
 });
 
@@ -159,7 +187,7 @@ var speaker = cache(function(qValue, qud) {
   return Infer({method : "enumerate"},
                function() {
     var utterance = utterancePrior()
-    observe(literalListener(utterance,qud),qValue)
+    factor(alpha * literalListener(utterance,qud).score(qValue))
     return utterance
   })
 });
@@ -272,6 +300,9 @@ var speaker = cache(function(qValue, qud) {
   })
 });
 
+// set speaker optimality
+var alpha = 1
+
 // Pragmatic listener, jointly infers the price state, speaker valence, and QUD
 var pragmaticListener = cache(function(utterance) {
   return Infer({method : "enumerate"},
@@ -281,7 +312,7 @@ var pragmaticListener = cache(function(utterance) {
     var qud = qudPrior()
     var qudFn = qudFns[qud]
     var qValue = qudFn(state, valence)
-    observe(speaker(qValue, qud),utterance)
+    factor(alpha * speaker(qValue, qud).score(utterance))
     return state
     //     return {state : state, valence : valence}
   })
