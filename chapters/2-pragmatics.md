@@ -34,6 +34,41 @@ var pragmaticListener = cache(function(access,utt) {
 
 The speaker model is now more complex: the speaker chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
+~~~~
+// red apple base rate
+var baserate = 0.8
+
+// state builder
+var substatePriors = function() {
+  var s1 = flip(baserate)
+  var s2 = flip(baserate)
+  var s3 = flip(baserate)
+  return [s1,s2,s3]
+}
+
+// speaker belief function
+var belief = function(actualState, access) {
+  var fun = function(access,state) {
+    return access ? state : _.sample(substatePriors())
+  }
+  return map2(fun,access,actualState);
+}
+
+// tally up the state
+var numTrue = function(state) {
+  var fun = function(x) {
+    x ? 1 : 0
+  }
+  return sum(map(fun,state))
+}
+
+print("1000 runs of the speaker's belief function:")
+viz.auto(repeat(1000,function() {numTrue(belief([true,true,true],[true,true,false]))}))
+
+~~~~
+
+> **Exercise:** Change the red apple base rate.
+
 $$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)}[U(u; s)])$$
 
 ~~~~
