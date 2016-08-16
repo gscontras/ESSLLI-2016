@@ -22,7 +22,7 @@ $$P_{L_{1}}(s\mid u, a) \propto P_{S_{1}}(u\mid s, a) \cdot P(s)$$
 
 The speaker model is now more complex: the speaker chooses an utterance to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
-$$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)[U(u; s)]})$$
+$$P_{S_{1}}(u\mid o, a) \propto exp(\alpha\mathbb{E}_{P(s\mid o, a)}[U(u; s)])$$
 
 The speaker's utility function remains unchanged, such that utterances are chosen to minimize cost and maximize informativity.
 
@@ -46,9 +46,8 @@ var substatePriors = function() {
 
 // speaker belief function
 var belief = function(actualState, access) {
-  var fun = function(access,state,prior) {
-    var sp = (substatePriors());
-    return access ? state : _.sample(sp)
+  var fun = function(access,state) {
+    return access ? state : _.sample(substatePriors())
   }
   return map2(fun,access,actualState);
 }
