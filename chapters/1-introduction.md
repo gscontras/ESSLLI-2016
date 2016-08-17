@@ -151,15 +151,15 @@ var pragmaticListener = function(utterance){
 }
 ~~~~
 
-
-
 Within the RSA framework, communication is thus modeled as in Fig. 1, where $$L_{1}$$ reasons about $$S_{1}$$’s reasoning about a hypothetical $$L_{0}$$.
 
 <img src="../images/rsa_schema.pdf" alt="Fig. 1: Graphical representation of the Bayesian RSA model." style="width: 400px;"/>
 <center>Fig. 1: Bayesian RSA schema.</center>
 
 
-#### Simple referential communication
+
+
+#### Application 1: Simple referential communication
 
 In its initial formulation, reft:frankgoodman2012 use the basic RSA framework to model referent choice in efficient communication. To see the mechanism at work, imagine a referential communication game with three objects, as in Fig. 2. 
 
@@ -241,7 +241,9 @@ viz.table(pragmaticListener("blue"))
 > 3. Add a new multi-word utterance.
 > 4. Check the behavior of the other possible utterances.
 
-#### Scalar implicature
+
+
+#### Application 2: Scalar implicature
 
 Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mechanisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated.
 
