@@ -13,7 +13,7 @@ description: "An introduction to language understanding as Bayesian inference"
 
 <!-- One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; \cite{montague1973} builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them? -->
 
-The Rational Speech-Act (RSA) framework views communication as recursive reasoning between a speaker and a listener. The listener interprets the speaker’s utterance by reasoning about a cooperative speaker trying to inform a naive listener about some state of affairs. Using Bayesian inference, the listener infers what the state of the world is likely to be given that a speaker produced some utterance, knowing that the speaker is reasoning about how a listener is most likely to interpret that utterance. Thus, we have at least three levels of inference. At the top, the sophisticated, **pragmatic listener**, $$L_{1}$$, reasons about the **pragmatic speaker**, $$S_{1}$$, and infers the state of the world $$s$$ given that the speaker chose to produce the utterance $$u$$. The speaker chooses $$u$$ by maximizing the probability that a naive, **literal listener**, $$L_{0}$$, would correctly infer the state of the world $$s$$ given the literal meaning of $$u$$.
+The Rational Speech-Act (RSA) framework views communication as recursive reasoning between a speaker and a listener. The listener interprets the speaker’s utterance by reasoning about a cooperative speaker trying to inform a naive listener about some state of affairs. Using Bayesian inference, the listener infers what the state of the world is likely to be given that a speaker produced some utterance, knowing that the speaker is reasoning about how a listener is most likely to interpret that utterance. Thus, we have (at least) three levels of inference. At the top, the sophisticated, **pragmatic listener**, $$L_{1}$$, reasons about the **pragmatic speaker**, $$S_{1}$$, and infers the state of the world $$s$$ given that the speaker chose to produce the utterance $$u$$. The speaker chooses $$u$$ by maximizing the probability that a naive, **literal listener**, $$L_{0}$$, would correctly infer the state of the world $$s$$ given the literal meaning of $$u$$.
 
 At the base of this reasoning, the naive, literal listener $$L_{0}$$ interprets an utterance according to its meaning. That is, $$L_{0}$$ computes the probability of $$s$$ given $$u$$ according to the semantics of $$u$$ and the prior probability of $$s$$. A standard view of the semantic content of an utterance suffices: a mapping from states of the world to truth values.
 
@@ -47,10 +47,10 @@ var meaning = function(utterance, world){
 
 // literal listener
 var literalListener = function(utterance){
-  Infer({method:"enumerate"},
-        function(){
+  Infer({method:"enumerate"}, function(){
     var world = worldPrior();
-    condition(meaning(utterance, world))
+    var uttTruthVal = meaning(utterance, world);
+    condition(uttTruthVal == true) // but also condition(uttTruthVal)
     return world
   })
 }
@@ -60,15 +60,20 @@ viz.table(literalListener("blue"))
 ~~~~
 
 > **Exercise:** Check what happens with the other utterances.
+> **Exercise:** In the model above, `worldPrior()` returns a sample from a `uniformDraw` over the possible world states. What happens when the listener's beliefs are not uniform over world states? (Hint, use a `categorical` distribution by calling `categorical({ps: [list_of_probabilities], vs: [list_of_states]})`).
 
-The speaker is assumed to act (i.e., choose an utterance) according to the *expected* utility of the possible actions. The speaker simulates what the outcome (i.e., utility) of a given action would be and uses this reasoning to choose actions. To model the inverse planning process, speakers are treated as rational actors (see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html) for some more background).
+Fantastic! We now have a way of integrating our prior beliefs about the world with the truth functional meaning of an utterance.
+
+On to the speaker. The speaker is modeled as a rational actor. He chooses an action (e.g., an utterance) according to its utility. The speaker simulates taking an action, evaluates its utility, and chooses actions in proportion to their utility. This is called a *softmax* optimal agent; a fully optimal agent would choose the action with the highest utility all of the time. (This kind of model is called *action as inverse planning*, for more on this see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html).)
+
+Here is a generic agent model:
 
 ~~~~
 // define possible actions
 var actions = ['a1', 'a2', 'a3'];
 
 // define some expected utility for the actions
-var expectedUtility = function(action){
+var utility = function(action){
   var table = { 
     a1: -1, 
     a2: 6, 
@@ -82,23 +87,21 @@ var alpha = 1
 
 // define a rational agent who chooses actions 
 // according to their expected utility
-var softMaxAgent = function(){
-  return Infer({ method: 'enumerate' }, function(){
+var agent = Infer({ method: 'enumerate' }, function(){
     var action = uniformDraw(actions);
-    factor(alpha * expectedUtility(action));
+    factor(alpha * utility(action));
     return action;
-  })
-};
+});
 
 print("the probability that an agent will take various actions:")
-viz.auto(softMaxAgent());
+viz.auto(agent);
 
 ~~~~
 
 > **Exercises:**
 
 > 1. Explore what happens when you change the agent's optimality.
-> 2. Explore what happens when you change the expected utilities.
+> 2. Explore what happens when you change the utilities.
 
 The speaker $$S_{1}$$ desires to choose an utterance $$u$$ that would most effectively communicate some state of the world $$s$$ to the hypothesized literal listener $$L_{0}$$. In other words, $$S_{1}$$ wants to minimize the effort $$L_{0}$$ would need to arrive at $$s$$ from $$u$$, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. $$S_{1}$$ thus seeks to minimize the surprisal of $$s$$ given $$u$$ for the literal listener $$L_{0}$$, while bearing in mind the utterance cost, $$C(u)$$.
 
