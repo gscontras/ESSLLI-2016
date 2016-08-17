@@ -25,11 +25,13 @@ $$P_{L_{0}}(s\mid u) \propto [\![u]\!](s) \cdot P(s)$$
 
 ~~~~
 // possible states of the world
-var worlds = [
-  {obj: "square", color: "blue"},
-  {obj: "circle", color: "blue"},
-  {obj: "square", color: "green"}
-]
+var worldPrior = function() {
+  return uniformDraw([
+    {obj: "square", color: "blue"},
+    {obj: "circle", color: "blue"},
+    {obj: "square", color: "green"}
+  ])
+}
 
 // possible one-word utterances
 var utterances = ["blue","green","square","circle"]
@@ -53,6 +55,8 @@ var literalListener = function(utterance){
   })
 }
 
+viz.table(literalListener("blue"))
+
 ~~~~
 
 The speaker is assumed to act (i.e., choose an utterance) according to the *expected* utility of the possible actions. The speaker simulates what the outcome (i.e., utility) of a given action would be and uses this reasoning to choose actions. To model the inverse planning process, speakers are treated as rational actors (see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html) for some more background).
@@ -74,7 +78,7 @@ var expectedUtility = function(action){
 // define speaker optimality
 var alpha = 1
 
-// define a rational agent who choses actions 
+// define a rational agent who chooses actions 
 // according to their expected utility
 var softMaxAgent = function(){
   return Infer({ method: 'enumerate' }, function(){
@@ -157,11 +161,13 @@ Suppose a speaker wants to signal an object, but only has a single word with whi
 // Here is the code from the Frank and Goodman RSA model
 
 // possible states of the world
-var worlds = [
-  {obj: "square", color: "blue"},
-  {obj: "circle", color: "blue"},
-  {obj: "square", color: "green"}
-]
+var worldPrior = function() {
+  return uniformDraw([
+    {obj: "square", color: "blue"},
+    {obj: "circle", color: "blue"},
+    {obj: "square", color: "green"}
+  ])
+}
 
 // possible one-word utterances
 var utterances = ["blue","green","square","circle"]
@@ -179,7 +185,7 @@ var meaning = function(utterance, world){
 var literalListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
-    var world = uniformDraw(worlds)
+    var world = worldPrior()
     condition(meaning(utterance, world))
     return world
   })
@@ -202,7 +208,7 @@ var speaker = function(world){
 var pragmaticListener = function(utterance){
   Infer({method:"enumerate"},
         function(){
-    var world = uniformDraw(worlds)
+    var world = worldPrior()
     observe(speaker(world),utterance)
     return world
   })
