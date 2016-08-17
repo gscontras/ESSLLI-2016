@@ -43,7 +43,7 @@ The present course serves to demonstrate that this semantic leveling is unnecess
 - [Probabilistic Models of Cognition](https://probmods.org): An introduction to computational cognitive science and the probabilistic programming language Church
 - [The Design and Implementation of Probabilistic Programming Languages](http://dippl.org): An introduction to probabilistic programming languages, WebPPL in particular
 - [webppl.org](http://webppl.org): An online editor for WebPPL
-- [WebPPL documentation](http://webppl.readthedocs.io/en/stable/)
+- [WebPPL documentation](http://webppl.readthedocs.io/en/master/)
 - [WebPPL-viz](http://probmods.github.io/webppl-viz/): A summary of the vizualization options in WebPPL
 - [Forest](http://forestdb.org): A Repository for probabilistic models
-- If you would rather use WebPPL from R: [RWebPPL](https://github.com/mhtess/rwebppl).
+- [RWebPPL](https://github.com/mhtess/rwebppl): If you would rather use WebPPL within R
