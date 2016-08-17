@@ -46,3 +46,4 @@ The present course serves to demonstrate that this semantic leveling is unnecess
 - [WebPPL documentation](http://webppl.readthedocs.io/en/stable/)
 - [WebPPL-viz](http://probmods.github.io/webppl-viz/): A summary of the vizualization options in WebPPL
 - [Forest](http://forestdb.org): A Repository for probabilistic models
+- If you would rather use WebPPL from R: [RWebPPL](https://github.com/mhtess/rwebppl).
