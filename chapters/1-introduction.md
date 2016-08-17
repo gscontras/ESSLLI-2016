@@ -24,6 +24,25 @@ $$P_{L_{0}}(s\mid u) \propto [\![u]\!](s) \cdot P(s)$$
 <!-- \mid -->
 
 ~~~~
+// possible states of the world
+var worlds = [
+  {obj: "square", color: "blue"},
+  {obj: "circle", color: "blue"},
+  {obj: "square", color: "green"}
+]
+
+// possible one-word utterances
+var utterances = ["blue","green","square","circle"]
+
+// meaning funtion to interpret the utterances
+var meaning = function(utterance, world){
+  return utterance == "blue" ? utterance==world.color :
+  utterance == "green" ? utterance==world.color :
+  utterance == "circle" ? utterance==world.obj :
+  utterance == "square" ? utterance==world.obj :
+  true
+}
+
 // literal listener
 var literalListener = function(utterance){
   Infer({method:"enumerate"},
@@ -33,9 +52,10 @@ var literalListener = function(utterance){
     return world
   })
 }
+
 ~~~~
 
-The speaker is assumed to act (i.e., choose an utterance) according to the *expected* utility of the possible actions. To model this decision process, speakers are treated as rational actors ([some background on agent models](http://agentmodels.org/chapters/3-agents-as-programs.html)).
+The speaker is assumed to act (i.e., choose an utterance) according to the *expected* utility of the possible actions. The speaker simulates what the outcome (i.e., utility) of a given action would be and uses this reasoning to choose actions. To model the inverse planning process, speakers are treated as rational actors (see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html) for some more background).
 
 ~~~~
 // define possible actions
@@ -98,7 +118,7 @@ var speaker = function(world){
 }
 ~~~~
 
-The pragmatic listener $$L_{1}$$ computes the probability of a state $$s$$ given some utterance $$u$$. By reasoning about the speaker $$S_{1}$$, this probability is proportional to the probability that $$S_{1}$$ would choose to utter $$u$$ to communicate about the state $$s$$, together with the prior probability of $$s$$ itself.
+The pragmatic listener $$L_{1}$$ computes the probability of a state $$s$$ given some utterance $$u$$. By reasoning about the speaker $$S_{1}$$, this probability is proportional to the probability that $$S_{1}$$ would choose to utter $$u$$ to communicate about the state $$s$$, together with the prior probability of $$s$$ itself. In other words, to interpret an utterance, the pragmatic listener considers the process that *generated* the utterance in the first place.
 
 <!-- <center>The pragmatic listener: P<sub>L<sub>1</sub></sub>(s|u) ∝ P<sub>S<sub>1</sub></sub>(u|s) · P(s)</center> -->
 
