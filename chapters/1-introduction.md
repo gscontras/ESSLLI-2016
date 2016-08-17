@@ -50,7 +50,7 @@ var literalListener = function(utterance){
   Infer({method:"enumerate"}, function(){
     var world = worldPrior();
     var uttTruthVal = meaning(utterance, world);
-    condition(uttTruthVal == true) // but also condition(uttTruthVal)
+    condition(uttTruthVal == true)
     return world
   })
 }
@@ -59,14 +59,17 @@ viz.table(literalListener("blue"))
 
 ~~~~
 
-> **Exercise:** Check what happens with the other utterances.
-> **Exercise:** In the model above, `worldPrior()` returns a sample from a `uniformDraw` over the possible world states. What happens when the listener's beliefs are not uniform over world states? (Hint, use a `categorical` distribution by calling `categorical({ps: [list_of_probabilities], vs: [list_of_states]})`).
+> **Exercises:** 
+
+> 1. Check what happens with the other utterances.
+> 2. In the model above, `worldPrior()` returns a sample from a `uniformDraw` over the possible world states. What happens when the listener's beliefs are not uniform over world states? (Hint, use a `categorical` distribution by calling `categorical({ps: [list_of_probabilities], vs: [list_of_states]})`).
 
 Fantastic! We now have a way of integrating our prior beliefs about the world with the truth functional meaning of an utterance.
 
 On to the speaker. The speaker is modeled as a rational actor. He chooses an action (e.g., an utterance) according to its utility. The speaker simulates taking an action, evaluates its utility, and chooses actions in proportion to their utility. This is called a *softmax* optimal agent; a fully optimal agent would choose the action with the highest utility all of the time. (This kind of model is called *action as inverse planning*, for more on this see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html).)
 
 Here is a generic softmax agent model. Note that in this model, `agent` uses `factor` (not `condition`). `factor` is a continuous (or, softer) version of `condition` that takes real numbers as arguments (instead of binary truth values). Higher numbers (here, utilities) upweight the probabilities of the actions associated with them.
+
 ~~~~
 // define possible actions
 var actions = ['a1', 'a2', 'a3'];
