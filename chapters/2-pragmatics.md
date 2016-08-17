@@ -69,7 +69,7 @@ viz.auto(repeat(1000,function() {
 
 ~~~~
 
-> **Exercise:** Change the red apple base rate.
+> **Exercise:** See what happens when you change the red apple base rate.
 
 The speaker then chooses an utterance $$u$$ to communicate the true state $$s$$ that likely generated the observation $$o$$ that the speaker made with access $$a$$.
 
@@ -182,6 +182,11 @@ print("pragmatic listener for a partial-access speaker:")
 viz.auto(pragmaticListener([true,true,false],'some'))
 
 ~~~~
+
+> **Exercise:** 
+
+> 1. Check the predictions for the other possible knowledge states.
+> 2. Compare the full-access predictions with yesterday's simpler SI model. Why are the predictions of the two models different? How can you get the model predictions to converge?
 
 We have seen how the RSA framework can implement the mechanism whereby utterance interpretations are strengthened. Through an interaction between what was said, what could have been said, and what all of those things literally mean, the model delivers scalar implicature. And by taking into account awareness of the speaker's knowledge, the model successfully *blocks* implicatures in those cases where listeners are unlikely to access them. 
 
@@ -361,6 +366,8 @@ print("pragmatic listener's interpretation of 'The kettle cost $10,000':")
 viz.auto(pragmaticListener(10000))
 
 ~~~~
+
+> **Exercise:** Explore the predictions for the other possible utterances.
 
 By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intends to communicate that the kettle price was upsetting. The model thus captures some of the most flexible uses of language: what we mean when our utteranes are literally false.
 
