@@ -66,13 +66,12 @@ Fantastic! We now have a way of integrating our prior beliefs about the world wi
 
 On to the speaker. The speaker is modeled as a rational actor. He chooses an action (e.g., an utterance) according to its utility. The speaker simulates taking an action, evaluates its utility, and chooses actions in proportion to their utility. This is called a *softmax* optimal agent; a fully optimal agent would choose the action with the highest utility all of the time. (This kind of model is called *action as inverse planning*, for more on this see [agentmodels.org](http://agentmodels.org/chapters/3-agents-as-programs.html).)
 
-Here is a generic agent model:
-
+Here is a generic softmax agent model. Note that in this model, `agent` uses `factor` (not `condition`). `factor` is a continuous (or, softer) version of `condition` that takes real numbers as arguments (instead of binary truth values). Higher numbers (here, utilities) upweight the probabilities of the actions associated with them.
 ~~~~
 // define possible actions
 var actions = ['a1', 'a2', 'a3'];
 
-// define some expected utility for the actions
+// define some utilities for the actions
 var utility = function(action){
   var table = { 
     a1: -1, 
@@ -103,13 +102,15 @@ viz.auto(agent);
 > 1. Explore what happens when you change the agent's optimality.
 > 2. Explore what happens when you change the utilities.
 
-The speaker $$S_{1}$$ desires to choose an utterance $$u$$ that would most effectively communicate some state of the world $$s$$ to the hypothesized literal listener $$L_{0}$$. In other words, $$S_{1}$$ wants to minimize the effort $$L_{0}$$ would need to arrive at $$s$$ from $$u$$, all while being efficient at communicating. This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. $$S_{1}$$ thus seeks to minimize the surprisal of $$s$$ given $$u$$ for the literal listener $$L_{0}$$, while bearing in mind the utterance cost, $$C(u)$$.
+In language understanding, the utility of an utterance is how well it communicates the state of the world $$s$$ to a listener. So, the speaker $$S_{1}$$ chooses utterances $$u$$ to communicate the state $$s$$ to the hypothesized literal listener $$L_{0}$$. In other words, $$S_{1}$$ wants to minimize the effort $$L_{0}$$ would need to arrive at $$s$$ from $$u$$, all while being efficient at communicating. $$S_{1}$$ thus seeks to minimize the surprisal of $$s$$ given $$u$$ for the literal listener $$L_{0}$$, while bearing in mind the utterance cost, $$C(u)$$. (This trade-off between efficacy and efficiency is not trivial: speakers could always use minimal ambiguity, but unambiguous utterances tend toward the unwieldy, and, very often, unnecessary. We will see this tension play out later in the course.)
 
 Speakers act in accordance with the speaker’s utility function $$U_{S_{1}}$$: utterances are more useful at communicating about some state as surprisal and utterance cost decrease.
 
 $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$
 
-With this utility function in mind, $$S_{1}$$ computes the probability of an utterance $$u$$ given some state $$s$$ in proportion to the speaker’s utility function $$U_{S_{1}}$$. The term $$\alpha > 0$$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. ($$\alpha$$ corresponds to the temperature parameter of $$S_{1}$$’s soft-max optimization.)
+(In WebPPL, $$log(L_{0}(s\mid u))$$ can be accessed via `literalListener(u).score(s)`.)
+
+With this utility function in mind, $$S_{1}$$ computes the probability of an utterance $$u$$ given some state $$s$$ in proportion to the speaker’s utility function $$U_{S_{1}}$$. The term $$\alpha > 0$$ controls the speaker’s optimality, that is, the speaker’s rationality in choosing utterances. 
 
 <!-- <center>The pragmatic speaker: P<sub>S<sub>1</sub></sub>(u|s) ∝ exp(αU<sub>S<sub>1</sub></sub>(u;s))</center> -->
 
@@ -118,8 +119,7 @@ $$P_{S_{1}}(u\mid s) \propto exp(\alpha U_{S_{1}}(u; s))$$
 ~~~~
 // pragmatic speaker
 var speaker = function(world){
-  Infer({method:"enumerate"},
-        function(){
+  Infer({method:"enumerate"}, function(){
     var utterance = utterancePrior();
     factor(alpha * literalListener(utterance).score(world))
     return utterance
@@ -128,6 +128,8 @@ var speaker = function(world){
 ~~~~
 
 > **Exercise:** Check the speaker's behavior for a blue square.
+
+We now have a model of the generative process of an utterance. With this in hand, we can now imagine a listener who thinks about this kind of speaker.
 
 The pragmatic listener $$L_{1}$$ computes the probability of a state $$s$$ given some utterance $$u$$. By reasoning about the speaker $$S_{1}$$, this probability is proportional to the probability that $$S_{1}$$ would choose to utter $$u$$ to communicate about the state $$s$$, together with the prior probability of $$s$$ itself. In other words, to interpret an utterance, the pragmatic listener considers the process that *generated* the utterance in the first place.
 
@@ -138,10 +140,9 @@ $$P_{L_{1}}(s\mid u) \propto P_{S_{1}}(u\mid s) \cdot P(s)$$
 ~~~~
 // pragmatic listener
 var pragmaticListener = function(utterance){
-  Infer({method:"enumerate"},
-        function(){
+  Infer({method:"enumerate"}, function(){
     var world = worldPrior();
-    observe(speaker(world),utterance)
+    observe(speaker(world), utterance)
     return world
   })
 }
