@@ -8,7 +8,7 @@ description: "Toward *a* model of predication"
 
 "If semantics exists, it must say something about the meaning of predicative expressions (properties) and their nexus to subjects (predication)." -- [Chierchia 1985](http://www.jstor.org/stable/4178443)
 
-### Existant predication models
+<!-- ### Existant predication models
 
 | Model			| Subject		| Predicate | Features |  
 | --- | --- | --- | --- | --- |
@@ -49,6 +49,6 @@ All of these may be either singular or plural.
 - Adjectives: John is *stupid*
 - Gradable adjectives: John is *tall*
 
-Predicates may ascribe **binary properties**, **gradable properties**, participation in **events**, or **generic** information.
+Predicates may ascribe **binary properties**, **gradable properties**, participation in **events**, or **generic** information. -->
 
 Here we link to the [next chapter](5-ontology.html).

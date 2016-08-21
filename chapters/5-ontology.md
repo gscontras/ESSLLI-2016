@@ -12,9 +12,7 @@ description: "Representing nouns, verbs, and modifiers"
   - Modification as conditioning
   - Flexibility and inference in predication
 
-~~~~
-// Here is the code for the determiners model
-
+<!-- ~~~~
 // Here is the code for the determiners model
 
 // worlds contain two individuals that can be blue and can be feps
@@ -266,5 +264,5 @@ viz.auto(speaker2(w_1111))
 ~~~~
 // Here is the code for the modifiers model
 
-~~~~
+~~~~ -->
 
