@@ -11,6 +11,113 @@ description: "Enriching the literal interpretations"
     - Functional Application; Predicate Modification 
   - The compositional semantics example from DIPPL -->
 
+#### Application 1: Scalar implicature
+
+Scalar implicature stands as the poster child of pragmatic inference. Utterances are strengthened---via implicature---from a relatively weak literal interpretation to a pragmatic interpretation that goes beyond the literal semantics: "Some of the apples are red," an utterance compatible with all of the apples being red, gets strengthed to "Some but not all of the apples are red."  The mechanisms underlying this process have been discussed at length. reft:goodmanstuhlmuller2013 apply an RSA treatment to the phenomenon and formally articulate the model by which scalar implicatures get calculated.
+
+Assume a world with three apples; zero, one, two, or three of those apples may be red:
+
+~~~~
+// possible states of the world
+var statePrior = function() {
+  return uniformDraw([0, 1, 2, 3])
+};
+statePrior() // sample a state
+~~~~
+
+Next, assume that speakers may describe the current state of the world in one of three ways:
+
+~~~~
+// possible utterances
+var utterancePrior = function() {
+  return uniformDraw(['all', 'some', 'none']);
+};
+
+// meaning funtion to interpret the utterances
+var literalMeanings = {
+  all: function(state) { return state === 3; },
+  some: function(state) { return state > 0; },
+  none: function(state) { return state === 0; }
+};
+
+var utt = utterancePrior(); // sample an utterance
+var meaning = literalMeanings[utt]; // get its meaning
+[utt, meaning(3)] // apply meaning to state = 3
+~~~~
+
+With this knowledge about the communcation scenario---crucially, the availability of the "all" alternative utterance---a pragmatic listener is able to infer from the "some" utterance that the "all" utterance describes an unlikely state. In other words, the pragmatic listener strengthens "some" via scalar implicature.
+
+Technical note: Below, `cache` is used to save the results of the various Bayesian inferences being performed. This is used for computational efficiency when dealing with nested inferences.
+
+~~~~
+// Here is the code from the basic scalar implicature model
+
+// possible states of the world
+var statePrior = function() {
+  return uniformDraw([0, 1, 2, 3])
+};
+
+// possible utterances
+var utterancePrior = function() {
+  return uniformDraw(['all', 'some', 'none']);
+};
+
+// meaning funtion to interpret the utterances
+var literalMeanings = {
+  all: function(state) { return state === 3; },
+  some: function(state) { return state > 0; },
+  none: function(state) { return state === 0; }
+};
+
+// literal listener
+var literalListener = cache(function(utt) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior()
+    var meaning = literalMeanings[utt]
+    condition(meaning(state))
+    return state
+  })
+});
+
+// set speaker optimality
+var alpha = 1
+
+// pragmatic speaker
+var speaker = cache(function(state) {
+  return Infer({method:"enumerate"},
+  function(){
+    var utt = utterancePrior()
+    factor(alpha * literalListener(utt).score(state))
+    return utt
+  })
+});
+
+// pragmatic listener
+var pragmaticListener = cache(function(utt) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior()
+    observe(speaker(state),utt)
+    return state
+  })
+});
+
+print("pragmatic listener's interpretation of 'some':")
+viz.auto(pragmaticListener('some'));
+
+~~~~
+
+> **Exercises:** 
+
+> 1. Explore what happens if you make the speaker *less* optimal.
+> 2. Add a new utterance.
+> 3. Check what would happen if 'some' literally meant some-but-not-all.
+> 4. Change the relative probabilities of the various states.
+
+
+#### Application 2: Scalar implication and speaker knowledge
+
 Capturing scalar implicature within the RSA framework might not induce waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller (2013) explored what happens when the speaker only has partial knowledge about the state of the world (Fig. 1). Below, we explore this model, taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world. 
 
 <img src="../images/scalar.png" alt="Fig. 3: Example communication scenario from Goodman and Stuhmüller." style="width: 500px;"/>
@@ -193,7 +300,7 @@ We have seen how the RSA framework can implement the mechanism whereby utterance
 The models we have so far considered strengthen the litereal interpretations of our utterances: from "blue" to "blue circle" and from "some" to "some-but-not-all." Next, we consider what happens when we use utterances that are *literally* false. As we'll see, the strategy of strengthening interpretations by narrowing the set of worlds that our utterances describe will no longer serve to capture our meanings.
 
 
-#### Hyperbole and the Question Under Discussion
+#### Application 3: Hyperbole and the Question Under Discussion
 
 If you hear that someone waited "a million years" for a table at a popular restaurant or paid "a thousand dollars" for a coffee at a hipster hangout, you are unlikely to conclude that the improbable literal meanings are true. Instead, you conclude that the diner waited a long time, or paid an exorbitant amount of money, *and that she is frustrated with the experience*. Whereas blue circles are compatible with the literal meaning of "blue," five-dollar coffees are not compatible with the literal meaning of "a thousand dollars." How, then, do we arrive at sensible interpretations when our words are literally false?
 
