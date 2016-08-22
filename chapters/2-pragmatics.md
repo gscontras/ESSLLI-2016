@@ -315,10 +315,10 @@ var approx = function(x,b) {
 ///
 
 var qudFns = {
-  state : function(state, valence) {return state},
-  valence : function(state, valence) {return valence},
-  stateValence : function(state, valence) {return [state, valence]},
-  approxState : function(state, valence) {return approx(state, 10)},
+  state : function(state, valence) {return {state: state} },
+  valence : function(state, valence) {return {valence: valence} },
+  stateValence : function(state, valence) {return {state: state, valence: valence} },
+  approxState : function(state, valence) {return {state: approx(state, 10) } },
 };
 
 print("QUD values for state (i.e., price)=51, valence (i.e., is annoyed?) = true")
@@ -336,24 +336,80 @@ print("approxState QUD")
 print(qudFns["approxState"](51, true))
 ~~~~
 
-> **Exercise:** Create a new QUD function and compute its value for `state = 51` and `valence = true`.
 
 The literal listener infers the answer to the QUD, assuming that the utterance he hears is true of the state:
 
 ~~~~
+///fold:
+// Round x to nearest multiple of b (used for approximate interpretation):
+var approx = function(x,b) {
+  return b * Math.round(x / b)
+};
+///
+
+// Define list of kettle prices under consideration (possible price states)
+var states = [50, 51, 500, 501, 1000, 1001, 5000, 5001, 10000, 10001];
+
+// Prior probability of kettle prices (taken from human experiments)
+var statePrior = function() {
+  return categorical([0.4205, 0.3865, 0.0533, 0.0538, 0.0223, 0.0211, 0.0112, 0.0111, 0.0083, 0.0120],
+                     states)
+};
+
+// Probability that given a price state, the speaker thinks it's too
+// expensive (taken from human experiments)
+var valencePrior = function(state) {
+  var probs = {
+    50 : 0.3173,
+    51 : 0.3173, 
+    500 : 0.7920,
+    501 : 0.7920, 
+    1000 : 0.8933,
+    1001 : 0.8933,
+    5000 : 0.9524,
+    5001 : 0.9524,
+    10000 : 0.9864,
+    10001 : 0.9864
+  }
+  var tf = flip(probs[state]);
+  return tf
+};
+
+var qudFns = {
+  state : function(state, valence) {return {state: state} },
+  valence : function(state, valence) {return {valence: valence} },
+  stateValence : function(state, valence) {return {state: state, valence: valence} },
+  approxState : function(state, valence) {return {state: approx(state, 10) } },
+};
+
+// Literal interpretation "meaning" function; 
+// checks if uttered number reflects price state
+var meaning = function(utterance, state) {
+  return utterance == state;
+};
+
+
 var literalListener = cache(function(utterance, qud) {
   return Infer({method : "enumerate"},
                function() {
+
     var state = statePrior()
     var valence = valencePrior(state)
     var qudFn = qudFns[qud]
+
     condition(meaning(utterance,state))
+
     return qudFn(state,valence)
   })
 });
 ~~~~
 
-> **Exercise:** 
+> **Exercises:** 
+
+> 1. Suppose the literal listener hears the kettle costs `10000` dollars with the `"stateValence"` QUD. What does it infer?
+> 2. Test out other QUDs. What aspects of interpretation does the literal listener capture? What aspects does it not capture?
+> 3. Create a new QUD function and try it out with "the kettle costs `10000` dollars".
+
 
 The speaker chooses an utterance to convey a particular value of the QUD to the literal listener:
 
