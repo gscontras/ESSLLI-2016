@@ -337,7 +337,7 @@ print(qudFns["approxState"](51, true))
 ~~~~
 
 
-The literal listener infers the answer to the QUD, assuming that the utterance he hears is true of the state:
+The literal listener infers the answer to the QUD, assuming that the utterance he hears is true of the state. In the full version, Kao et al. model liteners' reactions to statements about the price of electric kettles. They empirically estimate the prior knowledge people carry about kettle prices, as well as the probility of getting upset (i.e., experiencing a negatively-valenced affect) in response to a given price.
 
 ~~~~
 ///fold:
@@ -393,8 +393,8 @@ var literalListener = cache(function(utterance, qud) {
   return Infer({method : "enumerate"},
                function() {
 
-    var state = statePrior()
-    var valence = valencePrior(state)
+    var state = statePrior() // uncertainty about the state
+    var valence = valencePrior(state) // uncertainty about the valence
     var qudFn = qudFns[qud]
 
     condition(meaning(utterance,state))
@@ -410,8 +410,7 @@ var literalListener = cache(function(utterance, qud) {
 > 2. Test out other QUDs. What aspects of interpretation does the literal listener capture? What aspects does it not capture?
 > 3. Create a new QUD function and try it out with "the kettle costs `10000` dollars".
 
-
-The speaker chooses an utterance to convey a particular value of the QUD to the literal listener:
+This enriched literal listener does a joint inference about the state and the valence but assumes a particular QUD by which to interpret the utterance. Similarly, the speaker chooses an utterance to convey a particular value of the QUD to the literal listener:
 
 ~~~~
 var speaker = cache(function(qValue, qud) {
@@ -424,7 +423,7 @@ var speaker = cache(function(qValue, qud) {
 });
 ~~~~
 
-At the top level of inference, the pragmatic listener jointly infers the state, the speaker's valence, and the QUD:
+To model hyperbole, Kao et al. posited that the pragmatic listener actually has uncertainty about what the QUD is, and jointly infers the world state (and speaker valence) and the intended QUD from the utterance he receives. That is, the pragmatic listener simulates how the speaker would behave with various QUDs.
 
 ~~~~
 var pragmaticListener = cache(function(utterance) {
@@ -441,7 +440,7 @@ var pragmaticListener = cache(function(utterance) {
 });
 ~~~~
 
-In the full version, Kao et al. model liteners' reactions to statements about the price of electric kettles. They empirically estimate the prior knowledge people carry about kettle prices, as well as the probility of getting upset (i.e., experiencing a negatively-valenced affect) in response to a given price.
+Here is the full model:
 
 ~~~~
 ///fold:
@@ -484,16 +483,17 @@ var valencePrior = function(state) {
 // Prior over QUDs 
 var qudPrior = function() {
   return categorical([0.17, 0.32, 0.17, 0.17, 0.17],
-                     ["s", "v", "sv", "as", "asv"])
+                     ["state", "valence", "stateValence", "approxState", "approxStateValence"])
 };
 
 var qudFns = {
-  s : function(state, valence) {return state},
-  v : function(state, valence) {return valence},
-  sv : function(state, valence) {return [state, valence]},
-  as : function(state, valence) {return approx(state, 10)},
-  asv : function(state, valence) {return [approx(state, 10), valence]}
+  state : function(state, valence) {return {state: state} },
+  valence : function(state, valence) {return {valence: valence} },
+  stateValence : function(state, valence) {return {state: state, valence: valence} },
+  approxState : function(state, valence) {return {state: approx(state, 10) } },
+  approxStateValence: function(state, valence) {return {state: approx(state, 10), valence: valence } }
 };
+
 
 // Define list of possible utterances (same as price states)
 var utterances = states;
@@ -555,12 +555,11 @@ var pragmaticListener = cache(function(utterance) {
 
 var listenerPosterior = pragmaticListener(10000);
 
-print("pragmatic listener's joint interpretation of 'The kettle cost $10,000':")
-viz.auto(listenerPosterior)
-
 print("marginal distributions:")
 viz.marginals(listenerPosterior)
 
+print("pragmatic listener's joint interpretation of 'The kettle cost $10,000':")
+viz.auto(listenerPosterior)
 ~~~~
 
 > **Exercise:** Explore the predictions for the other possible utterances.
