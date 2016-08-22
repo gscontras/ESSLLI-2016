@@ -49,7 +49,7 @@ var numTrue = function(state) {
 var baserate = 0.8
 
 // state builder
-var substatePriors = function() {
+var statePrior = function() {
   var s1 = flip(baserate)
   var s2 = flip(baserate)
   var s3 = flip(baserate)
@@ -59,9 +59,9 @@ var substatePriors = function() {
 // speaker belief function
 var belief = function(actualState, access) {
   var fun = function(access,state) {
-    return access ? state : _.sample(substatePriors())
+    return access ? state : uniformDraw(statePrior())
   }
-  return map2(fun,access,actualState);
+  return map2(fun, access, actualState);
 }
 
 print("1000 runs of the speaker's belief function:")
@@ -98,13 +98,23 @@ $$U_{S_{1}}(u; s) = log(L_{0}(s\mid u)) - C(u)$$
 The intuition (which Goodman and Stuhlmüller validate experimentally) is that in cases where the speaker has partial knowledge access (say, she knows about only two out of three relevant apples), the listener will be less likely to calculate the implicature (because he knows that the speaker doesn't have the evidence to back up the strengthened meaning).
 
 ~~~~
+///fold:
+// tally up the state
+var numTrue = function(state) {
+  var fun = function(x) {
+    x ? 1 : 0
+  }
+  return sum(map(fun,state))
+}
+///
+
 // Here is the code from the Goodman and Stuhlmüller speaker-access SI model
 
 // red apple base rate
 var baserate = 0.8
 
-// state builder
-var substatePriors = function() {
+// state prior
+var statePrior = function() {
   var s1 = flip(baserate)
   var s2 = flip(baserate)
   var s3 = flip(baserate)
@@ -114,15 +124,10 @@ var substatePriors = function() {
 // speaker belief function
 var belief = function(actualState, access) {
   var fun = function(access,state) {
-    return access ? state : _.sample(substatePriors())
+    return access ? state : uniformDraw(statePrior())
   }
-  return map2(fun,access,actualState);
+  return map2(fun, access, actualState);
 }
-
-// state prior
-var statePrior = function() {
-  return substatePriors()
-} 
 
 // utterance prior
 var utterancePrior = function() {
@@ -131,9 +136,9 @@ var utterancePrior = function() {
 
 // meaning funtion to interpret utterances
 var literalMeanings = {
-  all: function(state) { return all(function(s){s},state); },
-  some: function(state) { return any(function(s){s},state); },
-  none: function(state) { return all(function(s){s==false},state); }
+  all: function(state) { return all(function(s){s}, state); },
+  some: function(state) { return any(function(s){s}, state); },
+  none: function(state) { return all(function(s){s==false}, state); }
 };
 
 // literal listener
@@ -160,14 +165,6 @@ var speaker = cache(function(access,state) {
     return utt
   })
 });
-
-// tally up the state
-var numTrue = function(state) {
-  var fun = function(x) {
-    x ? 1 : 0
-  }
-  return sum(map(fun,state))
-}
 
 // pragmatic listener
 var pragmaticListener = cache(function(access,utt) {
