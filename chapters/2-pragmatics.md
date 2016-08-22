@@ -562,7 +562,10 @@ print("pragmatic listener's joint interpretation of 'The kettle cost $10,000':")
 viz.auto(listenerPosterior)
 ~~~~
 
-> **Exercise:** Explore the predictions for the other possible utterances.
+> **Exercises:** 
+
+> 1. Try the `pragmaticListener` with the other possible utterances.
+> 2. Check the predictions of the `speaker` for the `approxStateValence` QUD.
 
 By capturing the extreme (im)probability of kettle prices, together with the flexibility introduced by shifting communicative goals, the model is able to derive the inference that a speaker who comments on a "$10,000 kettle" likely intends to communicate that the kettle price was upsetting. The model thus captures some of the most flexible uses of language: what we mean when our utteranes are literally false.
 
