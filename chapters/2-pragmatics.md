@@ -207,6 +207,23 @@ var qudFns = {
   approxState : function(state, valence) {return approx(state, 10)},
   approxStateValence : function(state, valence) {return [approx(state, 10), valence]}
 };
+
+print("QUD values for state (i.e., price)=51, valence (i.e., is annoyed?) = true")
+
+print("valence QUD")
+print(qudFns["valence"](51, true))
+
+print("state QUD")
+print(qudFns["state"](51, true))
+
+print("stateValence QUD")
+print(qudFns["stateValence"](51, true))
+
+print("approxState QUD")
+print(qudFns["approxState"](51, true))
+
+print("approxStateValence QUD")
+print(qudFns["approxStateValence"](51, true))
 ~~~~
 
 The literal listener infers the answer to the QUD, assuming that the utterance he hears is true of the state:
@@ -257,6 +274,13 @@ var pragmaticListener = cache(function(utterance) {
 In the full version, Kao et al. model liteners' reactions to statements about the price of electric kettles. They empirically estimate the prior knowledge people carry about kettle prices, as well as the probility of getting upset (i.e., experiencing a negatively-valenced affect) in response to a given price.
 
 ~~~~
+///fold:
+// Round x to nearest multiple of b (used for approximate interpretation):
+var approx = function(x,b) {
+  return b * Math.round(x / b)
+};
+///
+
 // Here is the code from the Kao et al. hyperbole model
 
 // Define list of kettle prices under consideration (possible price states)
@@ -284,7 +308,7 @@ var valencePrior = function(state) {
     10001 : 0.9864
   }
   var tf = flip(probs[state]);
-  return tf //? 1 : 0
+  return tf
 };
 
 // Prior over QUDs 
@@ -299,11 +323,6 @@ var qudFns = {
   sv : function(state, valence) {return [state, valence]},
   as : function(state, valence) {return approx(state, 10)},
   asv : function(state, valence) {return [approx(state, 10), valence]}
-};
-
-// Round x to nearest multiple of b (used for approximate interpretation):
-var approx = function(x,b) {
-  return b * Math.round(x / b)
 };
 
 // Define list of possible utterances (same as price states)
@@ -334,18 +353,18 @@ var literalListener = cache(function(utterance, qud) {
   })
 });
 
+// set speaker optimality
+var alpha = 1
+
 // Speaker, chooses an utterance to convey a particular value of the qud
 var speaker = cache(function(qValue, qud) {
   return Infer({method : "enumerate"},
                function() {
     var utterance = utterancePrior()
-    observe(literalListener(utterance,qud),qValue)
+    factor(alpha*literalListener(utterance,qud).score(qValue))
     return utterance
   })
 });
-
-// set speaker optimality
-var alpha = 1
 
 // Pragmatic listener, jointly infers the price state, speaker valence, and QUD
 var pragmaticListener = cache(function(utterance) {
@@ -354,11 +373,13 @@ var pragmaticListener = cache(function(utterance) {
     var state = statePrior()
     var valence = valencePrior(state)
     var qud = qudPrior()
+
     var qudFn = qudFns[qud]
     var qValue = qudFn(state, valence)
-    factor(alpha * speaker(qValue, qud).score(utterance))
-    return state
-    //     return {state : state, valence : valence}
+
+    observe(speaker(qValue, qud), utterance)
+
+    return {state : state, valence : valence}
   })
 });
 
