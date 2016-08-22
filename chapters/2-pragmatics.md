@@ -11,7 +11,7 @@ description: "Enriching the literal interpretations"
     - Functional Application; Predicate Modification 
   - The compositional semantics example from DIPPL -->
 
-Capturing scalar implicature within the RSA framework might not induce waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller propose taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world (Fig. 1). 
+Capturing scalar implicature within the RSA framework might not induce waves of excitement. However, by implementing implicature-calculation within a formal model of communication, we can also capture its interactions with other pragmatic factors. Goodman and Stuhlmüller (2013) explored what happens when the speaker only has partial knowledge about the state of the world (Fig. 1). Below, we explore this model, taking into account the listener's knowledge about the speaker's epistemic state: whether or not the speaker has full or partial knowledge about the state of the world. 
 
 <img src="../images/scalar.png" alt="Fig. 3: Example communication scenario from Goodman and Stuhmüller." style="width: 500px;"/>
 <center>Fig. 1: Example communication scenario from Goodman and Stuhmüller: How will the listener interpret the speaker’s utterance? How will this change if she knows that he can see only two of the objects?.</center>
@@ -32,9 +32,19 @@ var pragmaticListener = cache(function(access,utt) {
 });
 ~~~~
 
-The speaker model is now more complex: first the speaker makes an observation $$o$$ of the true state $$s$$ with access $$a$$. On the basis of the observation and access, the speaker infers the true state.
+We have to enrich the speaker model: first the speaker makes an observation $$o$$ of the true state $$s$$ with access $$a$$. On the basis of the observation and access, the speaker infers the true state.
 
 ~~~~
+///fold:
+// tally up the state
+var numTrue = function(state) {
+  var fun = function(x) {
+    x ? 1 : 0
+  }
+  return sum(map(fun,state))
+}
+///
+
 // red apple base rate
 var baserate = 0.8
 
@@ -54,15 +64,8 @@ var belief = function(actualState, access) {
   return map2(fun,access,actualState);
 }
 
-// tally up the state
-var numTrue = function(state) {
-  var fun = function(x) {
-    x ? 1 : 0
-  }
-  return sum(map(fun,state))
-}
-
 print("1000 runs of the speaker's belief function:")
+
 viz.auto(repeat(1000,function() {
   numTrue(belief([true,true,true],[true,true,false]))
 }))
