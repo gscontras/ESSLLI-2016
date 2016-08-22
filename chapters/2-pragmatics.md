@@ -383,8 +383,13 @@ var pragmaticListener = cache(function(utterance) {
   })
 });
 
-print("pragmatic listener's interpretation of 'The kettle cost $10,000':")
-viz.auto(pragmaticListener(10000))
+var listenerPosterior = pragmaticListener(10000);
+
+print("pragmatic listener's joint interpretation of 'The kettle cost $10,000':")
+viz.auto(listenerPosterior)
+
+print("marginal distributions:")
+viz.marginals(listenerPosterior)
 
 ~~~~
 
