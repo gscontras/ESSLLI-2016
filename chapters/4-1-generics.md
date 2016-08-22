@@ -6,7 +6,7 @@ description: "This is a test"
 
 ### Generic language
 
-This is a model of generic language used in Ref:tessler2016manuscript.
+This is a model of generic language used in reft:tessler2016manuscript.
 
 The model takes the generic [[K has F]] to mean the prevalence of 
 property F within kind K --- i.e., P(F | K) --- is above some threshold.
@@ -66,7 +66,7 @@ var structuredPriorModel = function(params){
     var prevalence = propertyIsPresent ? 
         categorical({ps: discretizeBeta(g,d), vs: bins}) : 
 	    0
-	    
+
     return prevalence
   })
 }
@@ -84,9 +84,9 @@ viz.auto(structuredPriorModel({phi: 0.5, gamma: 0.99, delta: 10}))
 var bins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99]
 
 // function returns a discretized beta PDF
-var discretizeBeta = function(gamma, delta){
-  var shape_alpha =  gamma * delta
-  var shape_beta = (1-gamma) * delta
+var discretizeBeta = function(g, d){
+  var shape_alpha =  g * d
+  var shape_beta = (1-g) * d
   var betaPDF = function(x){
     return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
   }
@@ -94,80 +94,76 @@ var discretizeBeta = function(gamma, delta){
 }
 
 var structuredPriorModel = function(params){
-  Enumerate(function(){
-    var theta = params["theta"]
+  Infer({method: "enumerate"}, function(){
+    var phi = params["phi"]
     var g = params["gamma"]
     var d = params["delta"]
-    var propertyIsPresent = flip(theta)
-    var prevalence = propertyIsPresent ? 
-        bins[discrete(discretizeBeta(g,d))] : 
-    0
+    var propertyIsPresent = flip(phi)
 
+    var prevalence = propertyIsPresent ? 
+        categorical({ps: discretizeBeta(g,d), vs: bins}) : 
+	    0
+	    
     return prevalence
   })
 }
 ///
 
-var s1optimality = 5
-var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-var thresholdPrior = function() {
-  var threshold = uniformDraw(thresholdBins)
-  return threshold
-}
+var alpha1 = 5;
+var alpha2 = 1;
+
+var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
+var thresholdPrior = function() { return uniformDraw(thresholdBins) };
 
 var utterancePrior = function() {
-  var utterances = ["generic is true", "mu"]  
-  //    var utterances = ["generic is true",
-  //                 "generic is false"]  
-  return flip(0.5) ? utterances[0] : utterances[1]
+  var utterances = ["generic", "silence"];
+  return uniformDraw(utterances);
 }
 
 var meaning = function(utt,state, threshold) {
-  return _.isNumber(utt) ? state == utt :
-  utt=="generic is true"? state>threshold :
-  utt=="generic is false"? state<=threshold :
-  utt=='mu'? true:
-  utt=='some'? state>0:
-  utt=='most'? state>= 0.5:
-  utt=='all'? state >= 0.99:
-  true
+  return utt == 'generic' ? state > threshold :
+  		 utt == 'negative generic' ? state <= threshold :
+	     utt == 'silence' ? true :
+  		 utt == 'some' ? state > 0 :
+ 		 utt == 'most' ? state >= 0.5 :
+ 		 utt == 'all' ? state >= 0.99 :
+		 true
 }
 
-var listener0 = cache(function(utterance, threshold, prior) {
-  Enumerate(function(){
-    var state = sample(prior)
+var literalListener = cache(function(utterance, threshold, statePrior) {
+  Infer({method: "enumerate"}, function(){
+    var state = sample(statePrior)
     var m = meaning(utterance, state, threshold)
     condition(m)
     return state
   })
 })
 
-var speaker1 = cache(function(state, threshold, prior) {
-  Enumerate(function(){
+var speaker1 = cache(function(state, threshold, statePrior) {
+  Infer({method: "enumerate"}, function(){
     var utterance = utterancePrior()
-    var L0 = listener0(utterance, threshold, prior)
-    factor(s1optimality*L0.score([],state))
+    var L0 = listener0(utterance, threshold, statePrior)
+    factor( alpha*L0.score(state) )
     return utterance
   })
 })
 
 
-var listener1 = function(utterance, prior) {
-  Enumerate(function(){
-    var state = sample(prior)
-    var threshold = thresholdPrior()
-    var S1 = speaker1(state, threshold, prior)
-    factor(S1.score([],utterance))
+var pragmaticListener = function(utterance, statePrior) {
+  Infer({method: "enumerate"}, function(){
+    var state = sample(statePrior);
+    var threshold = thresholdPrior();
+    var S1 = speaker1( state, threshold, prior );
+    observe(S1, utterance);
     return state
   })
 }
 
-
-var speaker2 = function(prevalence, prior){
-  Enumerate(function(){
-    var utterance = utterancePrior()
-    var wL1 = listener1(utterance, prior)
-    factor(wL1.score([], prevalence))
+var speaker2 = function(prevalence, statePrior){
+  Infer({method: "enumerate"}, function(){
+    var utterance = utterancePrior();
+    var L1 = listener1(utterance, prior);
+    factor( alpha2 * L1.score(state) )
     return utterance
   })
 }
