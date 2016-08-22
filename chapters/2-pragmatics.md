@@ -293,7 +293,7 @@ viz.auto(pragmaticListener([true,true,false],'some'))
 > **Exercise:** 
 
 > 1. Check the predictions for the other possible knowledge states.
-> 2. Compare the full-access predictions with yesterday's simpler SI model. Why are the predictions of the two models different? How can you get the model predictions to converge?
+> 2. Compare the full-access predictions with the predictions from the simpler SI model above. Why are the predictions of the two models different? How can you get the model predictions to converge?
 
 We have seen how the RSA framework can implement the mechanism whereby utterance interpretations are strengthened. Through an interaction between what was said, what could have been said, and what all of those things literally mean, the model delivers scalar implicature. And by taking into account awareness of the speaker's knowledge, the model successfully *blocks* implicatures in those cases where listeners are unlikely to access them. 
 
@@ -307,12 +307,18 @@ If you hear that someone waited "a million years" for a table at a popular resta
 reft:kaoetal2014 propose that we model hyperbole understanding as pragmatic inference. Crucially, they propose that we recognize uncertainty about **communicative goals**: what Question Under Discussion (QUD) a speaker is likely addressing with their utterance. To capture cases of hyperbole, Kao et al. observe that speakers are likely communicating---at least in part---about their attitude toward a state of the world (i.e., the valence of their *affect*). QUDs are modeled as summaries of the full world states, which take into account both state and valence (a binary positive/negative variable) information:
 
 ~~~~
+///fold:
+// Round x to nearest multiple of b (used for approximate interpretation):
+var approx = function(x,b) {
+  return b * Math.round(x / b)
+};
+///
+
 var qudFns = {
   state : function(state, valence) {return state},
   valence : function(state, valence) {return valence},
   stateValence : function(state, valence) {return [state, valence]},
   approxState : function(state, valence) {return approx(state, 10)},
-  approxStateValence : function(state, valence) {return [approx(state, 10), valence]}
 };
 
 print("QUD values for state (i.e., price)=51, valence (i.e., is annoyed?) = true")
@@ -328,10 +334,9 @@ print(qudFns["stateValence"](51, true))
 
 print("approxState QUD")
 print(qudFns["approxState"](51, true))
-
-print("approxStateValence QUD")
-print(qudFns["approxStateValence"](51, true))
 ~~~~
+
+> **Exercise:** Create a new QUD function and compute its value for `state = 51` and `valence = true`.
 
 The literal listener infers the answer to the QUD, assuming that the utterance he hears is true of the state:
 
@@ -347,6 +352,8 @@ var literalListener = cache(function(utterance, qud) {
   })
 });
 ~~~~
+
+> **Exercise:** 
 
 The speaker chooses an utterance to convey a particular value of the QUD to the literal listener:
 
