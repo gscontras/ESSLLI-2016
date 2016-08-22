@@ -279,6 +279,8 @@ var meaning = literalMeanings[utt]; // get its meaning
 
 With this knowledge about the communcation scenario---crucially, the availability of the "all" alternative utterance---a pragmatic listener is able to infer from the "some" utterance that the "all" utterance describes an unlikely state. In other words, the pragmatic listener strengthens "some" via scalar implicature.
 
+Technical note: Below, `cache` is used to save the results of the various Bayesian inferences being performed. This is used for computational efficiency when dealing with nested inferences.
+
 ~~~~
 // Here is the code from the basic scalar implicature model
 
