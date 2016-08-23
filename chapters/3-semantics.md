@@ -22,40 +22,53 @@ What we want is a way for our models of language understanding to target sub-pro
 
 Quantifier scope ambiguities have stood at the heart of linguistic inquiry for nearly as long as the enterprise has existed in its current form. reft:montague1973 builds the possibility for scope-shifting into the bones of his semantics. reft:may1977 proposes the rule of QR, which derives scope ambiguities syntactically. Either of these efforts ensures that when you combine quantifiers like *every* and *all* with other logical operators like negation, you get an ambiguous sentence; the ambiguities correspond to the relative scope of these operators within the logical form (LF) of the sentence (whence the name "scope ambiguities").
 
-- *All of the horses didn't jump over the fence.*
+- *All of the apples aren't red.*
 	- surface scope: ∀ > ¬; paraphrase: "none"
 	- inverse scope: ¬ > ∀; paraphrease: "not all"
 
 Rather than modeling the relative scoping of operators directly in the semantic composition, we can capture the possible meanings of these sentences---and, crucially, the active reasoning of speakers and listeners *about* these possible meanings---by assuming that the meaning of the utterance is evalatuated relative to a scope interpretation parameter (surface vs. inverse). The meaning function thus takes an utterance, a world state, and a scope interpretation parameter "inverse"; it returns a truth value.
 
 ~~~~
+// possible world states
+var states = [0,1,2];
+var statePrior = function() {
+  uniformDraw(states);
+}
+
 // possible utterances
 var utterances = ["null","all-not"];
 
+// possible scopes
+var scopePrior = function(){ 
+  return uniformDraw(["surface", "inverse"])
+}
+
 // meaning function
-var meaning = function(utterance,state,inverse) {
-  return utterance == "all-not" ?
-    inverse ? state < 2 : 
-  state == 0 :
+var meaning = function(utterance, state, scope) {
+  return utterance == "all-not" ? 
+  scope == "surface" ? state == 0 :
+  state < 2 : 
   true;
 };
+
+meaning("all-not", 1, "surface")
 ~~~~
 
 The literal listener *L<sub>0</sub>* has prior uncertainty about the true state, *s*, and otherwise updates beliefs about *s* by conditioning on the meaning of *u*:
 
 ~~~~
 // Literal listener (L0)
-var literalListener = cache(function(utterance,inverse) {
+var literalListener = cache(function(utterance, scope) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    condition(meaning(utterance,state,inverse));
+    condition(meaning(utterance,state,scope));
     return state;
   });
 });
 ~~~~
 
-The interpretation variable (*inverse*) is lifted, so that it will be actively reasoned about by the pragmatic listener. The pragmatic listener resolves the interpretation of an ambiguous utterance (determining what the speaker likely intended) while inferring the true state of the world:
+The interpretation variable (*scope*) is lifted, so that it will be actively reasoned about by the pragmatic listener. The pragmatic listener resolves the interpretation of an ambiguous utterance (determining what the speaker likely intended) while inferring the true state of the world:
 
 ~~~~
 // Pragmatic listener (L1)
@@ -63,9 +76,9 @@ var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    var inverse = flip(0.5);
-    observe(speaker(inverse,state),utterance);
-    return [inverse,state];
+    var scope = scopePrior();
+    observe(speaker(scope,state),utterance);
+    return [scope,state];
   });
 });
 ~~~~
@@ -104,31 +117,31 @@ var QUDFun = function(QUD,state) {
 };
 
 // meaning function
-var meaning = function(utterance,state,inverse) {
+var meaning = function(utterance,state,scope) {
   return utterance == "all-not" ?
-    inverse ? state < 2 : 
+    scope ? state < 2 : 
   state == 0 :
   true;
 };
 
 // Literal listener (L0)
-var literalListener = cache(function(utterance,inverse,QUD) {
+var literalListener = cache(function(utterance,scope,QUD) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
     var qState = QUDFun(QUD,state)
-    condition(meaning(utterance,state,inverse));
+    condition(meaning(utterance,state,scope));
     return qState;
   });
 });
 
 // Speaker (S)
-var speaker = cache(function(inverse,state,QUD) {
+var speaker = cache(function(scope,state,QUD) {
   return Infer({method:"enumerate"},
   function(){
     var utterance = utterancePrior();
     var qState = QUDFun(QUD,state);
-    observe(literalListener(utterance,inverse,QUD),qState);
+    observe(literalListener(utterance,scope,QUD),qState);
     return utterance;
   });
 });
@@ -138,11 +151,11 @@ var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    var inverse = flip(0.5);
+    var scope = flip(0.5);
     var QUD = QUDPrior();
-    observe(speaker(inverse,state,QUD),utterance);
+    observe(speaker(scope,state,QUD),utterance);
     return state;
-    //     return [state,inverse];
+    //     return [state,scope];
   });
 });
 
