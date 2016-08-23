@@ -123,7 +123,7 @@ Capturing scalar implicature within the RSA framework might not induce waves of 
 <img src="../images/scalar.png" alt="Fig. 3: Example communication scenario from Goodman and Stuhmüller." style="width: 500px;"/>
 <center>Fig. 1: Example communication scenario from Goodman and Stuhmüller: How will the listener interpret the speaker’s utterance? How will this change if she knows that he can see only two of the objects?.</center>
 
-In the extended Scalar Implicature model, the pragmatic listen infers the true state of the world not only on the basis of the observe utterance, but also the speaker's espistemic access $$a$$.
+In the extended Scalar Implicature model, the pragmatic listener infers the true state of the world not only on the basis of the observed utterance, but also the speaker's espistemic access $$a$$.
 
 $$P_{L_{1}}(s\mid u, a) \propto P_{S_{1}}(u\mid s, a) \cdot P(s)$$
 
@@ -293,7 +293,7 @@ viz.auto(pragmaticListener([true,true,false],'some'))
 > **Exercise:** 
 
 > 1. Check the predictions for the other possible knowledge states.
-> 2. Compare the full-access predictions with the predictions from the simpler SI model above. Why are the predictions of the two models different? How can you get the model predictions to converge?
+> 2. Compare the full-access predictions with the predictions from the simpler scalar implicature model above. Why are the predictions of the two models different? How can you get the model predictions to converge?
 
 We have seen how the RSA framework can implement the mechanism whereby utterance interpretations are strengthened. Through an interaction between what was said, what could have been said, and what all of those things literally mean, the model delivers scalar implicature. And by taking into account awareness of the speaker's knowledge, the model successfully *blocks* implicatures in those cases where listeners are unlikely to access them. 
 
@@ -324,16 +324,20 @@ var qudFns = {
 print("QUD values for state (i.e., price)=51, valence (i.e., is annoyed?) = true")
 
 print("valence QUD")
-print(qudFns["valence"](51, true))
+var fun = qudFns["valence"]
+print(fun(51, true))
 
 print("state QUD")
-print(qudFns["state"](51, true))
+var fun = qudFns["state"]
+print(fun(51, true))
 
 print("stateValence QUD")
-print(qudFns["stateValence"](51, true))
+var fun = qudFns["stateValence"]
+print(fun(51, true))
 
 print("approxState QUD")
-print(qudFns["approxState"](51, true))
+var fun = qudFns["approxState"]
+print(fun(51, true))
 ~~~~
 
 
