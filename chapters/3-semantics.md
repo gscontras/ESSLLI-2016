@@ -18,7 +18,7 @@ So far, the models we have considered operate at the level of full utterances.  
 
 What we want is a way for our models of language understanding to target sub-propositional aspects of meaning. We might wind up going the route of the fully-compositional but admittedly-unwieldy CCG semantic parser, but for current purposes an easier path presents itself: parameterizing our meaning function so that conversational agents can reason jointly over utterance interpretations and the parameters that fix them. To see how this move serves our aims, we consider two applications.
 
-#### Quantifier scope ambiguities
+#### Application 1: Quantifier scope ambiguities
 
 Quantifier scope ambiguities have stood at the heart of linguistic inquiry for nearly as long as the enterprise has existed in its current form. reft:montague1973 builds the possibility for scope-shifting into the bones of his semantics. reft:may1977 proposes the rule of QR, which derives scope ambiguities syntactically. Either of these efforts ensures that when you combine quantifiers like *every* and *all* with other logical operators like negation, you get an ambiguous sentence; the ambiguities correspond to the relative scope of these operators within the logical form (LF) of the sentence (whence the name "scope ambiguities").
 
@@ -249,7 +249,7 @@ viz.marginals(posterior);
 > **Exercise:** What does the pragmatic listener infer about the QUD?
 
 
-#### Gradable adjectives and vagueness resolution
+#### Application 2: Gradable adjectives and vagueness resolution
 
 Sometimes our words themselves are imprecise, vague, and heavily dependent on context to fix their interpretations. Compositionality assumes semantic atoms with invariant meanings; context-dependent word interpretations pose a serious challenge to compositionality. Take the case of gradable adjectives: "expensive for a sweater" means something quite different from "expensive for a laptop." What, then, do we make of the contribution from the word "expensive"? Semanticists settle on the least common denominator: a threshold semantics by which the adjective asserts that holders of the relevant property surpass some point on the relevant scale (i.e., *expensive* means more expensive than *d* for some contextually-determined degree of price *d*). Whereas semanticists punt on the mechanism by which context fixes these aspects of meaning, the RSA framework is well-suited to meet the challenge.
 
