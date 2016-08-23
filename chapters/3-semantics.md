@@ -46,15 +46,16 @@ var scopePrior = function(){
 // meaning function
 var meaning = function(utterance, state, scope) {
   return utterance == "all-not" ? 
-  scope == "surface" ? state == 0 :
+    scope == "surface" ? state == 0 :
   state < 2 : 
   true;
 };
 
 meaning("all-not", 1, "surface")
+
 ~~~~
 
-The literal listener *L<sub>0</sub>* has prior uncertainty about the true state, *s*, and otherwise updates beliefs about *s* by conditioning on the meaning of *u*:
+The literal listener *L<sub>0</sub>* has prior uncertainty about the true state, *s*, and otherwise updates beliefs about *s* by conditioning on the meaning of *u* together with the intended scope:
 
 ~~~~
 // Literal listener (L0)
@@ -155,7 +156,12 @@ viz.marginals(posterior);
 
 ~~~~
 
-We can also add uncertainty about the QUD to the scope model, as in the hyperbole model that we say yesterday
+> **Exercises:**
+
+> 1. The pragmatic listener believes the `inverse` interpretation is more likely. Why?
+> 2. Add some more utterances and check what happens to the interpretation of the ambiguous utterance.
+
+As in the hyperbole model, we can add uncertainty about the QUD:
 
 ~~~~
 // Here is the code for the quantifier scope model
@@ -240,84 +246,7 @@ viz.marginals(posterior);
 
 ~~~~
 
-<!-- // Here is the code for the quantifier scope model
-
-// possible utterances
-var utterances = ["null","all-not"];
-var cost = function(utterance) {
-  return 1;
-};
-var utterancePrior = function() {
-    return utterances[discrete(map(function(u) {
-      return Math.exp(-cost(u));
-    }, utterances))];
-};
-
-// possible world states
-var states = [0,1,2];
-var statePrior = function() {
-  uniformDraw(states);
-}
-
-// QUDs
-var QUDs = ["null","succeed?","fail?"];
-var QUDPrior = function() {
-  uniformDraw(QUDs);
-}
-var QUDFun = function(QUD,state) {
-  return QUD == "succeed?" ? state == 2 :
-  QUD == "fail?" ? state == 0 :
-  state;
-};
-
-// meaning function
-var meaning = function(utterance,state,scope) {
-  return utterance == "all-not" ?
-    scope ? state < 2 : 
-  state == 0 :
-  true;
-};
-
-// Literal listener (L0)
-var literalListener = cache(function(utterance,scope,QUD) {
-  return Infer({method:"enumerate"},
-  function(){
-    var state = statePrior();
-    var qState = QUDFun(QUD,state)
-    condition(meaning(utterance,state,scope));
-    return qState;
-  });
-});
-
-// Speaker (S)
-var speaker = cache(function(scope,state,QUD) {
-  return Infer({method:"enumerate"},
-  function(){
-    var utterance = utterancePrior();
-    var qState = QUDFun(QUD,state);
-    observe(literalListener(utterance,scope,QUD),qState);
-    return utterance;
-  });
-});
-
-// Pragmatic listener (L1)
-var pragmaticListener = cache(function(utterance) {
-  return Infer({method:"enumerate"},
-  function(){
-    var state = statePrior();
-    var scope = flip(0.5);
-    var QUD = QUDPrior();
-    observe(speaker(scope,state,QUD),utterance);
-    return {state: state,
-            scope: scope}
-  });
-});
-
-viz.auto(pragmaticListener("all-not")); -->
-
-> **Exercises:**
-
-> 1. What does the pragmatic listener infer about the QUD?
+> **Exercise:** What does the pragmatic listener infer about the QUD?
 
 
 #### Gradable adjectives and vagueness resolution
