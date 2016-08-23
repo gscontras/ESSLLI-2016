@@ -377,11 +377,15 @@ var pragmaticListener = function(utterance, item) {
 };
 
 var expensiveWatch = pragmaticListener("expensive", "watch");
+print("the listener's posterior over watch prices:")
 viz.density(marginalize(expensiveWatch, "price"));
+print("the listener's posterior over watch price thresholds:")
 viz.density(marginalize(expensiveWatch, "theta"));
 
 var expensiveSweater= pragmaticListener("expensive", "sweater");
+print("the listener's posterior over sweater prices:")
 viz.density(marginalize(expensiveSweater, "price"));
+print("the listener's posterior over sweater price thresholds:")
 viz.density(marginalize(expensiveSweater, "theta"));
 ~~~~
 
