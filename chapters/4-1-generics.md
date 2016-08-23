@@ -1,12 +1,16 @@
 ---
 layout: subchapter
 title: Generic language
-description: "This is a test"
+description: "Understanding generic language"
 ---
+
+# Under development 
+
+## Code boxes may or may not run
 
 ### Generic language
 
-This is a model of generic language used in reft:tessler2016manuscript.
+This is a model of generic language used in reft:tessler2016manuscript .
 
 The model takes the generic [[K has F]] to mean the prevalence of 
 property F within kind K --- i.e., P(F | K) --- is above some threshold.
