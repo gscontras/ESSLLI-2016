@@ -243,6 +243,12 @@ reft:lassitergoodman2013 propose we parameterize the meaning function for senten
 
 ~~~~
 ///fold:
+var marginalize = function(dist, key){
+  return Infer({method: "enumerate"}, function(){
+    return sample(dist)[key];
+  })
+}
+
 // "price" refers to the midpoint of the bin that participants marked a slider for
 // "probability" refers to the average of participants' responses, after normalizing responses for each person for each item
 var coffee = {
@@ -282,7 +288,7 @@ var prior = function(item) {
   var probabilities = data[item].probabilities;
 
   return function() {
-    return prices[discrete(probabilities)];
+    return categorical(probabilities, prices);
   };
 };
 
@@ -307,8 +313,9 @@ var cost = {
   "expensive": 1,
   "": 0
 };
-var utterance_prior = function() {
-  return utterances[discrete(map(function(u) {return Math.exp(-cost[u]);}, utterances))];
+var utterancePrior = function() {
+  var uttProbs = map(function(u) {return Math.exp(-cost[u]) }, utterances);
+  return categorical(uttProbs, utterances);
 };
 
 var meaning = function(utterance, price, theta) {
@@ -320,52 +327,48 @@ var meaning = function(utterance, price, theta) {
 };
 
 var literalListener = cache(function(utterance, theta, item) {
-  var price_prior = prior(item);
-  return Enumerate(function() {
-    var price = price_prior();
-    condition(meaning(utterance, price, theta));
+  var pricePrior = prior(item);
+  return Infer({method: "enumerate"}, function() {
+
+    var price = pricePrior()
+  
+    condition(meaning(utterance, price, theta))
+  
     return price;
   });
 });
 
 var speaker = cache(function(price, theta, item) {
-  return Enumerate(function() {
-    var utterance = utterance_prior();
-    factor( alpha * literalListener(utterance, theta, item).score([], price) );
+
+  return Infer({method: "enumerate"}, function() {
+
+    var utterance = utterancePrior();
+    
+    factor( alpha * literalListener(utterance, theta, item).score(price) );
+
     return utterance;
   });
 });
 
 var pragmaticListener = function(utterance, item) {
-  var price_prior = prior(item);
-  var theta_prior = theta_prior(item);
-  return ParticleFilter(function() {
-    var price = price_prior();
-    var theta = theta_prior();
-    factor( alpha * speaker(price, theta, item).score([], utterance) );
-    return {
-      price: price,
-      theta: theta
-    };
-  }, 1000);
+  var pricePrior = prior(item);
+  var thetaPrior = theta_prior(item);
+  return Infer({method: "enumerate"}, 
+  function() {
+    var price = pricePrior();
+    var theta = thetaPrior();
+    factor( speaker(price, theta, item).score(utterance) );
+    return { price: price, theta: theta };
+  });
 };
 
-// draw graphs
-///fold:
-var print_graph = function(item) {
-  print(item);
-  vizPrint({
-    "price_prior": Enumerate(prior(item)),
-    "theta_prior": Enumerate(theta_prior(item))
-  });
-  vizPrint(pragmaticListener("expensive", item));
-}
+var expensiveWatch = pragmaticListener("expensive", "watch");
+viz.density(marginalize(expensiveWatch, "price"));
+viz.density(marginalize(expensiveWatch, "theta"));
 
-var items = ["coffee maker", "headphones", "laptop", "sweater", "watch"];
-map(print_graph, items);
-
-""
-///
+var expensiveSweater= pragmaticListener("expensive", "sweater");
+viz.density(marginalize(expensiveSweater, "price"));
+viz.density(marginalize(expensiveSweater, "theta"));
 ~~~~
 
  While these "lifted-variable" RSA models do no model semantic composition directly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmaticsl; and by formalizing and thereby isolating the contributions of pragmatics, we may more accurately access the semantics.
