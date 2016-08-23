@@ -83,10 +83,79 @@ var pragmaticListener = cache(function(utterance) {
 });
 ~~~~
 
-The full model also takes into account uncertainty about the question under discussion (QUD): what information is relevant to the topic at hand.
+<!-- The full model also takes into account uncertainty about the question under discussion (QUD): what information is relevant to the topic at hand. -->
 
 ~~~~
 // Here is the code for the quantifier scope model
+
+// possible utterances
+var utterances = ["null","all-not"];
+var cost = function(utterance) {
+  return 1;
+};
+var utterancePrior = function() {
+    return utterances[discrete(map(function(u) {
+      return Math.exp(-cost(u));
+    }, utterances))];
+};
+
+// possible world states
+var states = [0,1,2];
+var statePrior = function() {
+  uniformDraw(states);
+}
+
+// possible scopes
+var scopePrior = function(){ 
+  return uniformDraw(["surface", "inverse"])
+}
+
+// meaning function
+var meaning = function(utterance, state, scope) {
+  return utterance == "all-not" ? 
+  scope == "surface" ? state == 0 :
+  state < 2 : 
+  true;
+};
+
+// Literal listener (L0)
+var literalListener = cache(function(utterance,scope) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior();
+    condition(meaning(utterance,state,scope));
+    return state;
+  });
+});
+
+// Speaker (S)
+var speaker = cache(function(scope,state,QUD) {
+  return Infer({method:"enumerate"},
+  function(){
+    var utterance = utterancePrior();
+    observe(literalListener(utterance,scope),state);
+    return utterance;
+  });
+});
+
+// Pragmatic listener (L1)
+var pragmaticListener = cache(function(utterance) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior();
+    var scope = flip(0.5);
+    var QUD = QUDPrior();
+    observe(speaker(scope,state),utterance);
+    return {state: state,
+            scope: scope}
+  });
+});
+
+viz.auto(pragmaticListener("all-not"));
+
+~~~~
+
+<!-- // Here is the code for the quantifier scope model
 
 // possible utterances
 var utterances = ["null","all-not"];
@@ -154,14 +223,17 @@ var pragmaticListener = cache(function(utterance) {
     var scope = flip(0.5);
     var QUD = QUDPrior();
     observe(speaker(scope,state,QUD),utterance);
-    return state;
-    //     return [state,scope];
+    return {state: state,
+            scope: scope}
   });
 });
 
-viz.auto(pragmaticListener("all-not"));
+viz.auto(pragmaticListener("all-not")); -->
 
-~~~~
+> **Exercises:**
+
+> 1. What does the pragmatic listener infer about the QUD?
+
 
 #### Gradable adjectives and vagueness resolution
 
