@@ -12,7 +12,7 @@ description: "Jointly inferring parameters and interpretations"
 
 
 
-One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; Montague builds this principle into the bones of his semantics, demonstrating with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them?
+One of the most remarkable aspects of natural language is its compositionality: speakers generate arbitrarily complex meanings by stitching together their smaller, meaning-bearing parts. The compositional nature of language has served as the bedrock of semantic (indeed, linguistic) theory since its modern inception; Montague demonstrates with his fragment how meaning gets constructed from a lexicon and some rules of composition. Since then, compositionality has continued to guide semantic inquiry: what are the meaning of the parts, and what is the nature of the mechanism that composes them? Put differently, what are the representations of the language we use, and what is the nature of the computational system that manipulates them?
 
 So far, the models we have considered operate at the level of full utterances.  These models assume conversational agents who reason over propositional content to arrive at enriched interpretations: "I want the blue one," "Some of the apples are red," "The electric kettle cost $10,000 dollars," etc. Now, let's approach meaning from the opposite direction: building the literal interpretations (and our model of the world that verifies them) from the bottom up: [semantic parsing](http://dippl.org/examples/semanticparsing.html). The model constructs literal interpretations and verifying worlds from the semantic atoms of sentences. However, whereas the model explicitly targets comositional semantics, it stops at the level of the literal listener, the base of RSA reasoning. In what follows, we consider a different approach to approximating compositional semantics within the RSA framework.
 
@@ -46,15 +46,16 @@ var scopePrior = function(){
 // meaning function
 var meaning = function(utterance, state, scope) {
   return utterance == "all-not" ? 
-  scope == "surface" ? state == 0 :
+    scope == "surface" ? state == 0 :
   state < 2 : 
   true;
 };
 
 meaning("all-not", 1, "surface")
+
 ~~~~
 
-The literal listener *L<sub>0</sub>* has prior uncertainty about the true state, *s*, and otherwise updates beliefs about *s* by conditioning on the meaning of *u*:
+The literal listener *L<sub>0</sub>* has prior uncertainty about the true state, *s*, and otherwise updates beliefs about *s* by conditioning on the meaning of *u* together with the intended scope:
 
 ~~~~
 // Literal listener (L0)
@@ -83,7 +84,7 @@ var pragmaticListener = cache(function(utterance) {
 });
 ~~~~
 
-<!-- The full model also takes into account uncertainty about the question under discussion (QUD): what information is relevant to the topic at hand. -->
+The full model puts all of these pieces together:
 
 ~~~~
 // Here is the code for the quantifier scope model
@@ -94,9 +95,9 @@ var cost = function(utterance) {
   return 1;
 };
 var utterancePrior = function() {
-    return utterances[discrete(map(function(u) {
-      return Math.exp(-cost(u));
-    }, utterances))];
+  return utterances[discrete(map(function(u) {
+    return Math.exp(-cost(u));
+  }, utterances))];
 };
 
 // possible world states
@@ -113,7 +114,7 @@ var scopePrior = function(){
 // meaning function
 var meaning = function(utterance, state, scope) {
   return utterance == "all-not" ? 
-  scope == "surface" ? state == 0 :
+    scope == "surface" ? state == 0 :
   state < 2 : 
   true;
 };
@@ -121,7 +122,7 @@ var meaning = function(utterance, state, scope) {
 // Literal listener (L0)
 var literalListener = cache(function(utterance,scope) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var state = statePrior();
     condition(meaning(utterance,state,scope));
     return state;
@@ -129,9 +130,9 @@ var literalListener = cache(function(utterance,scope) {
 });
 
 // Speaker (S)
-var speaker = cache(function(scope,state,QUD) {
+var speaker = cache(function(scope,state) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var utterance = utterancePrior();
     observe(literalListener(utterance,scope),state);
     return utterance;
@@ -141,21 +142,29 @@ var speaker = cache(function(scope,state,QUD) {
 // Pragmatic listener (L1)
 var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var state = statePrior();
-    var scope = flip(0.5);
-    var QUD = QUDPrior();
+    var scope = scopePrior();
     observe(speaker(scope,state),utterance);
     return {state: state,
             scope: scope}
   });
 });
 
-viz.auto(pragmaticListener("all-not"));
+var posterior = pragmaticListener("all-not")
+viz.marginals(posterior);
 
 ~~~~
 
-<!-- // Here is the code for the quantifier scope model
+> **Exercises:**
+
+> 1. The pragmatic listener believes the `inverse` interpretation is more likely. Why?
+> 2. Add some more utterances and check what happens to the interpretation of the ambiguous utterance.
+
+As in the hyperbole model, we can add uncertainty about the QUD:
+
+~~~~
+// Here is the code for the quantifier scope model
 
 // possible utterances
 var utterances = ["null","all-not"];
@@ -163,9 +172,9 @@ var cost = function(utterance) {
   return 1;
 };
 var utterancePrior = function() {
-    return utterances[discrete(map(function(u) {
-      return Math.exp(-cost(u));
-    }, utterances))];
+  return utterances[discrete(map(function(u) {
+    return Math.exp(-cost(u));
+  }, utterances))];
 };
 
 // possible world states
@@ -174,23 +183,27 @@ var statePrior = function() {
   uniformDraw(states);
 }
 
+// possible scopes
+var scopePrior = function(){ 
+  return uniformDraw(["surface", "inverse"])
+}
+
+// meaning function
+var meaning = function(utterance, state, scope) {
+  return utterance == "all-not" ? 
+    scope == "surface" ? state == 0 :
+  state < 2 : 
+  true;
+};
+
 // QUDs
-var QUDs = ["null","succeed?","fail?"];
+var QUDs = ["how many?","all red?"];
 var QUDPrior = function() {
   uniformDraw(QUDs);
 }
 var QUDFun = function(QUD,state) {
-  return QUD == "succeed?" ? state == 2 :
-  QUD == "fail?" ? state == 0 :
+  return QUD == "all red?" ? state == 2 :
   state;
-};
-
-// meaning function
-var meaning = function(utterance,state,scope) {
-  return utterance == "all-not" ?
-    scope ? state < 2 : 
-  state == 0 :
-  true;
 };
 
 // Literal listener (L0)
@@ -220,7 +233,7 @@ var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
   function(){
     var state = statePrior();
-    var scope = flip(0.5);
+    var scope = scopePrior();
     var QUD = QUDPrior();
     observe(speaker(scope,state,QUD),utterance);
     return {state: state,
@@ -228,11 +241,12 @@ var pragmaticListener = cache(function(utterance) {
   });
 });
 
-viz.auto(pragmaticListener("all-not")); -->
+var posterior = pragmaticListener("all-not")
+viz.marginals(posterior);
 
-> **Exercises:**
+~~~~
 
-> 1. What does the pragmatic listener infer about the QUD?
+> **Exercise:** What does the pragmatic listener infer about the QUD?
 
 
 #### Gradable adjectives and vagueness resolution
