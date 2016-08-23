@@ -253,7 +253,88 @@ viz.marginals(posterior);
 
 Sometimes our words themselves are imprecise, vague, and heavily dependent on context to fix their interpretations. Compositionality assumes semantic atoms with invariant meanings; context-dependent word interpretations pose a serious challenge to compositionality. Take the case of gradable adjectives: "expensive for a sweater" means something quite different from "expensive for a laptop." What, then, do we make of the contribution from the word "expensive"? Semanticists settle on the least common denominator: a threshold semantics by which the adjective asserts that holders of the relevant property surpass some point on the relevant scale (i.e., *expensive* means more expensive than *d* for some contextually-determined degree of price *d*). Whereas semanticists punt on the mechanism by which context fixes these aspects of meaning, the RSA framework is well-suited to meet the challenge.
 
-reft:lassitergoodman2013 propose we parameterize the meaning function for sentences containing gradable adjectives so that their interpretations are underspecified. This interpretation-fixing parameter, the gradable threshold value *theta* (i.e., a degree), is something that conversational participants can use their prior knowledge to actively reason about and set. As with the ambiguity-resolving variable above, *theta* gets lifted to the level of the pragmatic listener, who jointly infers the gradable threshold (e.g., the point at which elements of the relevant domain count as expensive) and the true state (e.g., the indicated element's price). Rather than assume prior knowledge (e.g., knowledge about domain-specific prices), Lassiter and Goodman measure it, then feed these measurements into the model as facts about the world.
+reft:lassitergoodman2013 propose we parameterize the meaning function for sentences containing gradable adjectives so that their interpretations are underspecified. This interpretation-fixing parameter, the gradable threshold value *theta* (i.e., a degree), is something that conversational participants can use their prior knowledge to actively reason about and set. As with the ambiguity-resolving variable above, *theta* gets lifted to the level of the pragmatic listener, who jointly infers the gradable threshold (e.g., the point at which elements of the relevant domain count as expensive) and the true state (e.g., the indicated element's price). 
+
+~~~~
+///fold:
+var marginalize = function(dist, key){
+  return Infer({method: "enumerate"}, function(){
+    return sample(dist)[key];
+  })
+}
+///
+
+var book = {
+  "prices": [2, 6, 10, 14, 18, 22, 26, 30],
+  "probabilities": [1, 2, 3, 4, 4, 3, 2, 1]
+};
+
+var statePrior = function() {
+  return categorical(book.probabilities, book.prices);
+};
+
+var thetaPrior = function() {
+    return uniformDraw(book.prices);
+};
+
+var alpha = 1; // rationality parameter
+
+var utterances = ["expensive", ""];
+var cost = {
+  "expensive": 1,
+  "": 0
+};
+var utterancePrior = function() {
+  var uttProbs = map(function(u) {return Math.exp(-cost[u]) }, utterances);
+  return categorical(uttProbs, utterances);
+};
+
+var meaning = function(utterance, price, theta) {
+  if (utterance == "expensive") {
+    return price >= theta;
+  } else {
+    return true;
+  }
+};
+
+var literalListener = cache(function(utterance, theta, item) {
+  return Infer({method: "enumerate"}, function() {
+    var price = statePrior();
+
+    condition(meaning(utterance, price, theta))
+
+    return price;
+  });
+});
+
+var speaker = cache(function(price, theta, item) {
+  return Infer({method: "enumerate"}, function() {
+    var utterance = utterancePrior();
+
+    factor( alpha * literalListener(utterance, theta, item).score(price) );
+
+    return utterance;
+  });
+});
+
+var pragmaticListener = function(utterance, item) {
+  return Infer({method: "enumerate"}, function() {
+    var price = statePrior();
+    var theta = thetaPrior();
+    factor(speaker(price, theta, item).score(utterance));
+    return { price: price, theta: theta };
+  });
+};
+
+var expensiveBook = pragmaticListener("expensive", "book");
+viz.auto(marginalize(expensiveBook, "price"));
+viz.auto(marginalize(expensiveBook, "theta"));
+
+~~~~
+
+> **Exercise:** What happens when you make the `"expensive"` utterance more costly? Why?
+
+Rather than assuming prior knowledge (e.g., knowledge about domain-specific prices), Lassiter and Goodman measure it, then feed these measurements into the model as facts about the world. Doing so allows the model to make actual predictions about the behavior we expect to observe from listeners.
 
 ~~~~
 ///fold:
@@ -388,10 +469,8 @@ print("the listener's posterior over sweater price thresholds:")
 viz.density(marginalize(expensiveSweater, "theta"));
 ~~~~
 
-> **Exercises:** 
+> **Exercise:** Check the listener's behavior for coffee makers and headphones and laptops.
 
-> 1. Check the listener's behavior for coffee makers and headphones and laptops.
-> 2. What happens when you make the `"expensive"` utterance more costly? Why?
 
  While these "lifted-variable" RSA models do no model semantic composition directly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmaticsl; and by formalizing and thereby isolating the contributions of pragmatics, we may more accurately access the semantics.
 
