@@ -341,13 +341,12 @@ var meaning = function(utterance, price, theta) {
 };
 
 var literalListener = cache(function(utterance, theta, item) {
-  var pricePrior = prior(item);
   return Infer({method: "enumerate"}, function() {
-
+    var pricePrior = prior(item);
     var price = pricePrior()
-  
+
     condition(meaning(utterance, price, theta))
-  
+
     return price;
   });
 });
@@ -388,6 +387,11 @@ viz.density(marginalize(expensiveSweater, "price"));
 print("the listener's posterior over sweater price thresholds:")
 viz.density(marginalize(expensiveSweater, "theta"));
 ~~~~
+
+> **Exercises:** 
+
+> 1. Check the listener's behavior for coffee makers and headphones and laptops.
+> 2. What happens when you make the `"expensive"` utterance more costly? Why?
 
  While these "lifted-variable" RSA models do no model semantic composition directly, they do capture its effect on utterance interpretations, which allows us to more precisely identify and investigate the factors that ought to push interpretations around. In other words, these models open up semantics to the purview of computational and experimental pragmaticsl; and by formalizing and thereby isolating the contributions of pragmatics, we may more accurately access the semantics.
 
