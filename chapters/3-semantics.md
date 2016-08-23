@@ -83,7 +83,7 @@ var pragmaticListener = cache(function(utterance) {
 });
 ~~~~
 
-<!-- The full model also takes into account uncertainty about the question under discussion (QUD): what information is relevant to the topic at hand. -->
+The full model puts all of these pieces together:
 
 ~~~~
 // Here is the code for the quantifier scope model
@@ -94,9 +94,9 @@ var cost = function(utterance) {
   return 1;
 };
 var utterancePrior = function() {
-    return utterances[discrete(map(function(u) {
-      return Math.exp(-cost(u));
-    }, utterances))];
+  return utterances[discrete(map(function(u) {
+    return Math.exp(-cost(u));
+  }, utterances))];
 };
 
 // possible world states
@@ -113,7 +113,7 @@ var scopePrior = function(){
 // meaning function
 var meaning = function(utterance, state, scope) {
   return utterance == "all-not" ? 
-  scope == "surface" ? state == 0 :
+    scope == "surface" ? state == 0 :
   state < 2 : 
   true;
 };
@@ -121,7 +121,7 @@ var meaning = function(utterance, state, scope) {
 // Literal listener (L0)
 var literalListener = cache(function(utterance,scope) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var state = statePrior();
     condition(meaning(utterance,state,scope));
     return state;
@@ -129,9 +129,9 @@ var literalListener = cache(function(utterance,scope) {
 });
 
 // Speaker (S)
-var speaker = cache(function(scope,state,QUD) {
+var speaker = cache(function(scope,state) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var utterance = utterancePrior();
     observe(literalListener(utterance,scope),state);
     return utterance;
@@ -141,17 +141,102 @@ var speaker = cache(function(scope,state,QUD) {
 // Pragmatic listener (L1)
 var pragmaticListener = cache(function(utterance) {
   return Infer({method:"enumerate"},
-  function(){
+               function(){
     var state = statePrior();
-    var scope = flip(0.5);
-    var QUD = QUDPrior();
+    var scope = scopePrior();
     observe(speaker(scope,state),utterance);
     return {state: state,
             scope: scope}
   });
 });
 
-viz.auto(pragmaticListener("all-not"));
+var posterior = pragmaticListener("all-not")
+viz.marginals(posterior);
+
+~~~~
+
+We can also add uncertainty about the QUD to the scope model, as in the hyperbole model that we say yesterday
+
+~~~~
+// Here is the code for the quantifier scope model
+
+// possible utterances
+var utterances = ["null","all-not"];
+var cost = function(utterance) {
+  return 1;
+};
+var utterancePrior = function() {
+  return utterances[discrete(map(function(u) {
+    return Math.exp(-cost(u));
+  }, utterances))];
+};
+
+// possible world states
+var states = [0,1,2];
+var statePrior = function() {
+  uniformDraw(states);
+}
+
+// possible scopes
+var scopePrior = function(){ 
+  return uniformDraw(["surface", "inverse"])
+}
+
+// meaning function
+var meaning = function(utterance, state, scope) {
+  return utterance == "all-not" ? 
+    scope == "surface" ? state == 0 :
+  state < 2 : 
+  true;
+};
+
+// QUDs
+var QUDs = ["how many?","all red?"];
+var QUDPrior = function() {
+  uniformDraw(QUDs);
+}
+var QUDFun = function(QUD,state) {
+  return QUD == "all red?" ? state == 2 :
+  state;
+};
+
+// Literal listener (L0)
+var literalListener = cache(function(utterance,scope,QUD) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior();
+    var qState = QUDFun(QUD,state)
+    condition(meaning(utterance,state,scope));
+    return qState;
+  });
+});
+
+// Speaker (S)
+var speaker = cache(function(scope,state,QUD) {
+  return Infer({method:"enumerate"},
+  function(){
+    var utterance = utterancePrior();
+    var qState = QUDFun(QUD,state);
+    observe(literalListener(utterance,scope,QUD),qState);
+    return utterance;
+  });
+});
+
+// Pragmatic listener (L1)
+var pragmaticListener = cache(function(utterance) {
+  return Infer({method:"enumerate"},
+  function(){
+    var state = statePrior();
+    var scope = scopePrior();
+    var QUD = QUDPrior();
+    observe(speaker(scope,state,QUD),utterance);
+    return {state: state,
+            scope: scope}
+  });
+});
+
+var posterior = pragmaticListener("all-not")
+viz.marginals(posterior);
 
 ~~~~
 
