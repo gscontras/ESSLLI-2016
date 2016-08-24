@@ -123,23 +123,21 @@ var structuredPriorModel = function(params){
 }
 ///
 
+var utterances = ["generic", "silence"];
+
 var thresholdPrior = function() { return uniformDraw(thresholdBins) };
+var utterancePrior = function() { return uniformDraw(utterances) };
 
-var utterancePrior = function() {
-  var utterances = ["generic", "silence"];
-  return uniformDraw(utterances);
+var meaning = function(utterance, state, threshold) {
+  return (utterance == 'generic') ? state > threshold : true
 }
 
-var meaning = function(utt,state, threshold) {
-  return utt == 'generic' ? state > threshold :
-         true
-}
+var threshold = thresholdPrior()
 
-var threshold = thresholdPrior();
 [threshold, meaning("generic", 0.5, threshold)]
 ~~~~
 
-Full model
+Let's now add in RSA.
 
 ~~~~
 ///fold:
@@ -178,23 +176,22 @@ var structuredPriorModel = function(params){
 var alpha_1 = 5;
 var alpha_2 = 1;
 
+var utterances = ["generic", "silence"];
+
 var thresholdPrior = function() { return uniformDraw(thresholdBins) };
+var utterancePrior = function() { return uniformDraw(utterances) }
 
-var utterancePrior = function() {
-  var utterances = ["generic", "silence"];
-  return uniformDraw(utterances);
-}
-
-var meaning = function(utt,state, threshold) {
-  return utt == 'generic' ? state > threshold :
-         true
+var meaning = function(utterance, state, threshold) {
+  return (utterance == 'generic') ? state > threshold : true
 }
 
 var literalListener = cache(function(utterance, threshold, statePrior) {
   Infer({method: "enumerate"}, function(){
     var state = sample(statePrior)
+
     var m = meaning(utterance, state, threshold)
     condition(m)
+    
     return state
   })
 })
@@ -202,40 +199,47 @@ var literalListener = cache(function(utterance, threshold, statePrior) {
 var speaker1 = cache(function(state, threshold, statePrior) {
   Infer({method: "enumerate"}, function(){
     var utterance = utterancePrior()
+    
     var L0 = literalListener(utterance, threshold, statePrior)
     factor( alpha_1*L0.score(state) )
+    
     return utterance
   })
 })
 
 var pragmaticListener = function(utterance, statePrior) {
   Infer({method: "enumerate"}, function(){
-    var state = sample(statePrior);
-    var threshold = thresholdPrior();
-    var S1 = speaker1( state, threshold, statePrior );
-    observe(S1, utterance);
+    var state = sample(statePrior)
+    var threshold = thresholdPrior()
+
+    var S1 = speaker1(state, threshold, statePrior)
+    observe(S1, utterance)
+    
     return {prevalence: state}
   })
 }
 
-var hasWingsPrior = structuredPriorModel({potential: 0.3, 
-                               prevalenceWhenPresent: 0.99, 
-                               concentrationWhenPresent: 10})
+// "Feps have wings."
+var hasWingsPrior = structuredPriorModel({
+  potential: 0.3, 
+  prevalenceWhenPresent: 0.99, 
+  concentrationWhenPresent: 10
+})
                     
+var fepsHaveWings = pragmaticListener("generic", hasWingsPrior);
+print("Listener interpretation of 'feps have wings'")
+viz.auto(fepsHaveWings)
+
+// "Wugs carry malaria."
 var carriesMalariaPrior = structuredPriorModel({
   potential: 0.01, 
   prevalenceWhenPresent: 0.1, 
   concentrationWhenPresent: 5
 })
 
-var fepsHaveWings = pragmaticListener("generic", hasWingsPrior);
 var fepsCarryMalaria = pragmaticListener("generic", carriesMalariaPrior);
-
-print("Listener interpretation of 'feps have wings'")
-
-viz.auto(fepsHaveWings)
+print('Listener interpretation of "wugs carry malaria"')
 viz.auto(fepsCarryMalaria)
-
 
 ~~~~
 
@@ -245,12 +249,26 @@ So we have a model that can interpret generic language (with a very simple seman
 
 
 ~~~~
-var speaker2 = function(state, statePrior){
-  Infer({method: "enumerate"}, function(){
+///...
 
-    var utterance = utterancePrior();
-    var L1 = pragmaticListener(utterance, statePrior);
-  
+var speaker1 = cache(function(state, threshold) {
+  Infer({method: "enumerate"}, function(){
+    var utterance = utterancePrior()
+    
+    var L0 = literalListener(utterance, threshold)
+    factor( alpha_1*L0.score(state) )
+    
+    return utterance
+  })
+})
+
+///...
+
+var speaker2 = function(state){
+  Infer({method: "enumerate"}, function(){
+    var utterance = utterancePrior()
+
+    var L1 = pragmaticListener(utterance);  
     factor( alpha_2 * L1.score(state) )
   
     return utterance
@@ -258,7 +276,7 @@ var speaker2 = function(state, statePrior){
 }
 ~~~~
 
-full model
+Let's put speaker2 on top of the pragmatic listener.
 
 ~~~~
 ///fold:
@@ -325,6 +343,7 @@ var speaker1 = cache(function(state, threshold, statePrior) {
     return utterance
   })
 })
+///
 
 var pragmaticListener = cache(function(utterance, statePrior) {
   Infer({method: "enumerate"}, function(){
@@ -335,35 +354,38 @@ var pragmaticListener = cache(function(utterance, statePrior) {
     return state
   })
 })
-///
 
 var speaker2 = function(state, statePrior){
   Infer({method: "enumerate"}, function(){
-
     var utterance = utterancePrior();
     var L1 = pragmaticListener(utterance, statePrior);
-  
     factor( alpha_2 * L1.score(state) )
-  
     return utterance
   })
 }
 
-
 var prevalence = 0.01
 
-print('Truth judgment of "Mosquitos carry malaria"')
-print('...assuming (the speaker believes) ' + prevalence * 100 + '% of mosquitos carry malaria.')
-                    
 var carriesMalariaPrior = structuredPriorModel({
   potential: 0.01, 
   prevalenceWhenPresent: 0.01, 
   concentrationWhenPresent: 5
 })
 
+print('Prior on "carries malaria"')
+viz.density(carriesMalariaPrior)
+
+print('Truth judgment of "Mosquitos carry malaria"')
+print('...assuming (the speaker believes) ' + prevalence * 100 + '% of mosquitos carry malaria.')
 viz.auto(speaker2(prevalence, carriesMalariaPrior))
 
 ~~~~
+
+> **Exercises:**
+
+> 1. Test *Birds lay eggs* vs. *Birds are female*.
+> 2. Come up with other generic sentences. Hypothesize what the prior might be, and what the prevalence might be, and test the model on it.
+
 
 #### Extension: Generics with gradable adjectives
 
