@@ -87,6 +87,60 @@ viz.auto(structuredPriorModel({potential: 0.3,
 
 #### Generics model
 
+Meaning function
+
+~~~~
+///fold:
+// discretized range between 0 - 1
+var bins = _.range(0.01, 1, 0.025);
+var thresholdBins = _.range(0, 1, 0.025);
+
+// function returns a discretized Beta PDF
+var discretizeBeta = function(g, d){
+  var shape_alpha =  g * d
+  var shape_beta = (1-g) * d
+  var betaPDF = function(x){
+    return Math.pow(x,shape_alpha-1)*Math.pow((1-x),shape_beta-1)
+  }
+  return map(betaPDF, bins)
+}
+
+var structuredPriorModel = function(params){
+  Infer({method: "enumerate"}, function(){
+
+    // unpack parameters
+    var potential = params["potential"]
+    var g = params["prevalenceWhenPresent"]
+    var d = params["concentrationWhenPresent"]
+    
+    var propertyIsPresent = flip(potential)
+    var prevalence = propertyIsPresent ? 
+          categorical(discretizeBeta(g,d), bins) : 
+          0
+
+    return prevalence
+  })
+}
+///
+
+var thresholdPrior = function() { return uniformDraw(thresholdBins) };
+
+var utterancePrior = function() {
+  var utterances = ["generic", "silence"];
+  return uniformDraw(utterances);
+}
+
+var meaning = function(utt,state, threshold) {
+  return utt == 'generic' ? state > threshold :
+         true
+}
+
+var threshold = thresholdPrior();
+[threshold, meaning("generic", 0.5, threshold)]
+~~~~
+
+Full model
+
 ~~~~
 ///fold:
 // discretized range between 0 - 1
@@ -185,9 +239,26 @@ viz.auto(fepsCarryMalaria)
 
 ~~~~
 
-> Exercise: Test pragmatic listener interpretations of generics about different properties (hence, different priors).
+> **Exercise:** Test pragmatic listener interpretations of generics about different properties (hence, different priors).
 
 So we have a model that can interpret generic language (with a very simple semantics). We can now imagine a speaker who thinks about this type of listener, and decides if a generic utterance is a good thing to say. If we specificy the alternative utterance to be a *null* utterance (or, *silence)
+
+
+~~~~
+var speaker2 = function(state, statePrior){
+  Infer({method: "enumerate"}, function(){
+
+    var utterance = utterancePrior();
+    var L1 = pragmaticListener(utterance, statePrior);
+  
+    factor( alpha_2 * L1.score(state) )
+  
+    return utterance
+  })
+}
+~~~~
+
+full model
 
 ~~~~
 ///fold:
@@ -300,42 +371,55 @@ viz.auto(speaker2(prevalence, carriesMalariaPrior))
 First, a world with entities.
 
 ~~~~
+var altBeta = function(g, d){
+  var a =  g * d;
+  var b = (1-g) * d;
+  return beta(a, b)
+}
 
-var theWorld = [
-  {name: "fep0", kind: "fep", wings: true, legs: false, claws: false, height: 0.3},
-  {name: "fep1", kind: "fep", wings: true, legs: false, claws: false, height: 0.4},
-  {name: "fep2", kind: "fep", wings: true, legs: false, claws: false, height: 0.2},
-  {name: "fep3", kind: "fep", wings: true, legs: false, claws: false, height: 0.8},
-  {name: "fep4", kind: "fep", wings: true, legs: false, claws: false, height: 0.5},
-  {name: "fep5", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
-  {name: "fep6", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
-  {name: "fep7", kind: "fep", wings: false, legs: false, claws: false, height: 0.5},
-  {name: "fep8", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
-  {name: "fep9", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
+var fep = function() {
+  return {
+    kind: "fep", 
+    wings: flip(0.5), 
+    legs: flip(0.01), 
+    claws: flip(0.01), 
+    height: altBeta(0.5, 10)
+  }
+}
 
-  {name: "wug0", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
-  {name: "wug1", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
-  {name: "wug2", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
-  {name: "wug3", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
-  {name: "wug4", kind: "wug", wings: true, legs: true, claws: false, height: 0.2},
-  {name: "wug5", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
-  {name: "wug6", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
-  {name: "wug7", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
-  {name: "wug8", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
-  {name: "wug9", kind: "wug", wings: false, legs: true, claws: false, height: 0.1},
+var wug = function() {
+  return {
+    kind: "wug", 
+    wings: flip(0.5), 
+    legs: flip(0.99), 
+    claws: flip(0.3), 
+    height: altBeta(0.2, 10)
+  }
+}
 
-  {name: "lorch0", kind: "lorch", wings: true, legs: true, claws: true, height: 0.7},
-  {name: "lorch1", kind: "lorch", wings: true, legs: true, claws: true, height: 0.6},
-  {name: "lorch2", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
-  {name: "lorch3", kind: "lorch", wings: true, legs: true, claws: false, height: 0.6},
-  {name: "lorch4", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
-  {name: "lorch5", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
-  {name: "lorch6", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
-  {name: "lorch7", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
-  {name: "lorch8", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
-  {name: "lorch9", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6}
-]
+var glippet = function() {
+  return {
+    kind: "glippet", 
+    wings: flip(0.5), 
+    legs: flip(0.99), 
+    claws: flip(0.2), 
+    height: altBeta(0.8, 10)
+  }
+}
 
+var theWorld = _.flatten([repeat(10, fep), repeat(10, wug), repeat(10, glippet)])
+
+var kinds = _.uniq(_.pluck(theWorld, "kind"));
+
+print('height distribution over all creatures')
+viz.density(_.pluck(theWorld, "height"))
+
+var rs = map(function(k){
+  print('height distribution for ' + k)
+  viz.density(_.pluck(_.where(theWorld,{kind: k}), "height"), {bounds:[0,1]})
+}, kinds)
+
+print('')
 ~~~~
 
 
@@ -348,40 +432,45 @@ var stateBins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
 var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 var alpha_1 = 5
 
-var theWorld = [
-  {name: "fep0", kind: "fep", wings: true, legs: false, claws: false, height: 0.3},
-  {name: "fep1", kind: "fep", wings: true, legs: false, claws: false, height: 0.4},
-  {name: "fep2", kind: "fep", wings: true, legs: false, claws: false, height: 0.2},
-  {name: "fep3", kind: "fep", wings: true, legs: false, claws: false, height: 0.8},
-  {name: "fep4", kind: "fep", wings: true, legs: false, claws: false, height: 0.5},
-  {name: "fep5", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
-  {name: "fep6", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
-  {name: "fep7", kind: "fep", wings: false, legs: false, claws: false, height: 0.5},
-  {name: "fep8", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
-  {name: "fep9", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
+var altBeta = function(g, d){
+  var a =  g * d;
+  var b = (1-g) * d;
+  return beta(a, b)
+}
 
-  {name: "wug0", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
-  {name: "wug1", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
-  {name: "wug2", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
-  {name: "wug3", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
-  {name: "wug4", kind: "wug", wings: true, legs: true, claws: false, height: 0.2},
-  {name: "wug5", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
-  {name: "wug6", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
-  {name: "wug7", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
-  {name: "wug8", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
-  {name: "wug9", kind: "wug", wings: false, legs: true, claws: false, height: 0.1},
+var fep = function() {
+  return {
+    kind: "fep", 
+    wings: flip(0.5), 
+    legs: flip(0.01), 
+    claws: flip(0.01), 
+    height: altBeta(0.5, 10)
+  }
+}
 
-  {name: "lorch0", kind: "lorch", wings: true, legs: true, claws: true, height: 0.7},
-  {name: "lorch1", kind: "lorch", wings: true, legs: true, claws: true, height: 0.6},
-  {name: "lorch2", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
-  {name: "lorch3", kind: "lorch", wings: true, legs: true, claws: false, height: 0.6},
-  {name: "lorch4", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
-  {name: "lorch5", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
-  {name: "lorch6", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
-  {name: "lorch7", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
-  {name: "lorch8", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
-  {name: "lorch9", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6}
-]
+var wug = function() {
+  return {
+    kind: "wug", 
+    wings: flip(0.5), 
+    legs: flip(0.99), 
+    claws: flip(0.3), 
+    height: altBeta(0.2, 10)
+  }
+}
+
+var glippet = function() {
+  return {
+    kind: "glippet", 
+    wings: flip(0.5), 
+    legs: flip(0.99), 
+    claws: flip(0.2), 
+    height: altBeta(0.8, 10)
+  }
+}
+
+var theWorld = _.flatten([repeat(10, fep), repeat(10, wug), repeat(10, glippet)])
+
+var kinds = _.uniq(_.pluck(theWorld, "kind"));
 ///
 
 var allKinds = _.uniq(_.pluck(theWorld, "kind"))
