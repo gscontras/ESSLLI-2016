@@ -9,8 +9,8 @@ description: "Toward *a* model of predication"
 "If semantics exists, it must say something about the meaning of predicative expressions (properties) and their nexus to subjects (predication)." -- [Chierchia 1985](http://www.jstor.org/stable/4178443)
 
 
-[Generics]({{ "/chapters/4-1-generics.html" | prepend: site.baseurl }})
-
+<!-- [Generics]({{ "/chapters/4-1-generics.html" | prepend: site.baseurl }})
+ -->
 
 <!-- ### Existant predication models
 
