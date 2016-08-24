@@ -294,15 +294,12 @@ viz.auto(speaker2(prevalence, carriesMalariaPrior))
 
 ~~~~
 
-#### Application 2: Gradable adjectives and vagueness resolution
+#### Extension: Generics with gradable adjectives
 
+
+First, a world with entities.
 
 ~~~~
-
-// discretized range between 0 - 1
-var stateBins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
-var s1optimality = 5
 
 var theWorld = [
   {name: "fep0", kind: "fep", wings: true, legs: false, claws: false, height: 0.3},
@@ -339,8 +336,55 @@ var theWorld = [
   {name: "lorch9", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6}
 ]
 
+~~~~
 
-var allKinds = _.uniq(_.pluck(world, "kind"))
+
+
+
+~~~~
+///fold:
+// discretized range between 0 - 1
+var stateBins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
+var alpha_1 = 5
+
+var theWorld = [
+  {name: "fep0", kind: "fep", wings: true, legs: false, claws: false, height: 0.3},
+  {name: "fep1", kind: "fep", wings: true, legs: false, claws: false, height: 0.4},
+  {name: "fep2", kind: "fep", wings: true, legs: false, claws: false, height: 0.2},
+  {name: "fep3", kind: "fep", wings: true, legs: false, claws: false, height: 0.8},
+  {name: "fep4", kind: "fep", wings: true, legs: false, claws: false, height: 0.5},
+  {name: "fep5", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
+  {name: "fep6", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
+  {name: "fep7", kind: "fep", wings: false, legs: false, claws: false, height: 0.5},
+  {name: "fep8", kind: "fep", wings: false, legs: false, claws: false, height: 0.3},
+  {name: "fep9", kind: "fep", wings: false, legs: false, claws: false, height: 0.4},
+
+  {name: "wug0", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
+  {name: "wug1", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
+  {name: "wug2", kind: "wug", wings: true, legs: true, claws: true, height: 0.2},
+  {name: "wug3", kind: "wug", wings: true, legs: true, claws: true, height: 0.1},
+  {name: "wug4", kind: "wug", wings: true, legs: true, claws: false, height: 0.2},
+  {name: "wug5", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
+  {name: "wug6", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
+  {name: "wug7", kind: "wug", wings: false, legs: true, claws: false, height: 0.3},
+  {name: "wug8", kind: "wug", wings: false, legs: true, claws: false, height: 0.2},
+  {name: "wug9", kind: "wug", wings: false, legs: true, claws: false, height: 0.1},
+
+  {name: "lorch0", kind: "lorch", wings: true, legs: true, claws: true, height: 0.7},
+  {name: "lorch1", kind: "lorch", wings: true, legs: true, claws: true, height: 0.6},
+  {name: "lorch2", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
+  {name: "lorch3", kind: "lorch", wings: true, legs: true, claws: false, height: 0.6},
+  {name: "lorch4", kind: "lorch", wings: true, legs: true, claws: false, height: 0.7},
+  {name: "lorch5", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
+  {name: "lorch6", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
+  {name: "lorch7", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6},
+  {name: "lorch8", kind: "lorch", wings: false, legs: true, claws: false, height: 0.7},
+  {name: "lorch9", kind: "lorch", wings: false, legs: true, claws: false, height: 0.6}
+]
+///
+
+var allKinds = _.uniq(_.pluck(theWorld, "kind"))
 
 var propertyDegrees = {
   wings: "wings",
@@ -376,7 +420,7 @@ var prevalencePrior = function(property, world){
 }
 
 var scalePrior = function(property){
-  var p = _.pluck(world, property)
+  var p = _.pluck(theWorld, property)
   return map(function(s){
     return reduce(function(x, i){
       var k = x ==s ? 1 : 0
@@ -456,9 +500,8 @@ var worldWithTallness = map(function(thing){
   var tallDistribution = Infer({method: "enumerate"},
   function(){
     var utterance = utterancePrior("height")
-    var tallnessPosterior = pragmaticListener(utterance, "height")
 
-    observe(pragmaticListener, thing.height)
+    observe(pragmaticListener(utterance, "height"), thing.height)
 
     return utterance
 
@@ -473,7 +516,7 @@ var speaker2 = function(k, f){
 
     var property = f.split(' ')[1]
     var degree = propertyDegrees[property]
-    var world = _.isNumber(theWorld[0][degree]) ? worldWithTallness : world
+    var world = _.isNumber(theWorld[0][degree]) ? worldWithTallness : theWorld
     var prev = prevalence(world, k, property)
 
     var utterance = utterancePrior(property)
@@ -484,13 +527,12 @@ var speaker2 = function(k, f){
 
     return utterance=="generic" ? 
            k + "s " + f :
-          "I don't think " + k + "s " + f
+          "don't think so"
   })
 }
 
 
-speaker2("lorch", "are tall")
-
+viz.auto(speaker2("lorch", "are tall"))
 ~~~~
 
 References:
