@@ -246,7 +246,7 @@ viz.marginals(posterior);
 
 ~~~~
 
-> **Exercise:** What does the pragmatic listener infer about the QUD?
+> **Exercise:** What does the pragmatic listener infer about the QUD? Does this match your own intuitions? If not, how can you more closely align the model's predictions with your own?
 
 
 #### Application 2: Gradable adjectives and vagueness resolution
