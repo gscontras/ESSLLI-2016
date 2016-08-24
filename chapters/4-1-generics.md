@@ -134,7 +134,8 @@ var meaning = function(utterance, state, threshold) {
 
 var threshold = thresholdPrior()
 
-[threshold, meaning("generic", 0.5, threshold)]
+print(threshold)
+meaning("generic", 0.5, threshold)
 ~~~~
 
 Let's now add in RSA.
@@ -454,6 +455,20 @@ var stateBins = [0.01,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
 var thresholdBins = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9]
 var alpha_1 = 5
 
+var round = function(x){
+  var rounded = Math.round(10*x)/10
+  return rounded == 0 ? 0.01 : rounded
+}
+
+var makeHistogram = function(prevalences){
+  return map(function(s){
+    return reduce(function(x, i){
+      var k = x == s ? 1 : 0
+      return i + k
+    }, 0.001, prevalences)
+  }, stateBins)
+}
+
 var altBeta = function(g, d){
   var a =  g * d;
   var b = (1-g) * d;
@@ -466,7 +481,7 @@ var fep = function() {
     wings: flip(0.5), 
     legs: flip(0.01), 
     claws: flip(0.01), 
-    height: altBeta(0.5, 10)
+    height: round(altBeta(0.5, 10))
   }
 }
 
@@ -476,7 +491,7 @@ var wug = function() {
     wings: flip(0.5), 
     legs: flip(0.99), 
     claws: flip(0.3), 
-    height: altBeta(0.2, 10)
+    height: round(altBeta(0.2, 10))
   }
 }
 
@@ -486,15 +501,12 @@ var glippet = function() {
     wings: flip(0.5), 
     legs: flip(0.99), 
     claws: flip(0.2), 
-    height: altBeta(0.8, 10)
+    height: round(altBeta(0.8, 10))
   }
 }
-
-var theWorld = _.flatten([repeat(10, fep), repeat(10, wug), repeat(10, glippet)])
-
-var kinds = _.uniq(_.pluck(theWorld, "kind"));
 ///
 
+var theWorld = _.flatten([repeat(10, fep), repeat(10, wug), repeat(10, glippet)])
 var allKinds = _.uniq(_.pluck(theWorld, "kind"))
 
 var propertyDegrees = {
@@ -510,75 +522,52 @@ var hasF = function(thing, property){
 
 var prevalence = function(world, kind, property){
   var members = _.where(world, {kind: kind})
-
-  var v = filter(function(x){return hasF(x, property)}, members)
-  var mean =  v.length == 0 ? 0.01 : sum(_.pluck(v, property)) / members.length
-  // round to nearest bin
-  return mean == 0.01 ? 0.01 : Math.floor(10*mean)/10
+  return round(listMean(_.pluck(members, property)))
 }
 
-// initialize reduce to 0.001 so that each state has > 0 prob
 var prevalencePrior = function(property, world){
   var p =  map(function(k){return prevalence(world, k, property)}, allKinds)
-
-  return map(function(s){
-    return reduce(function(x, i){
-      var k = x==s ? 1 : 0
-      return i + k
-    }, 0.001, p)
-  }, stateBins)
-
+  return makeHistogram(p)
 }
 
 var scalePrior = function(property){
   var p = _.pluck(theWorld, property)
-  return map(function(s){
-    return reduce(function(x, i){
-      var k = x ==s ? 1 : 0
-      return i + k
-    }, 0.001, p)
-  }, stateBins)
+  return makeHistogram(p)
 }
 
+var statePrior = function(probs){ return categorical(probs, stateBins) }
+var thresholdPrior = function() { return uniformDraw(thresholdBins) }
 
-var statePrior = function(probs){
-  return categorical(probs, stateBins)
-}
-
-var thresholdPrior = function() {
-  return uniformDraw(thresholdBins)
-}
-
-var utterancePrior = function(predicate) {
-  var utterances = predicate == "height" ? 
-            ["tall", "null"] :
-            ["generic", "null"]
+var utterancePrior = function(scale) {
+  var utterances = scale == "height" ? 
+      ["tall", "null"] :
+  ["generic", "null"]
   return uniformDraw(utterances)
 }
 
 var meaning = function(utt, state, threshold) {
   return utt == "generic" ? state > threshold :
-         utt == "tall" ? state > threshold :
-         true
+  utt == "tall" ? state > threshold :
+  true
 }
 
-var literalListener = cache(function(utterance, threshold, prior) {
+var literalListener = cache(function(utterance, threshold, stateProbs) {
   Infer({method: "enumerate"}, function(){
 
-    var state = statePrior(prior)
+    var state = statePrior(stateProbs)
     var m = meaning(utterance, state, threshold)
-  
+
     condition(m)
-  
+
     return state
   })
 })
 
-var speaker1 = cache(function(state, threshold, prior, predicate) {
+var speaker1 = cache(function(state, threshold, stateProbs, predicate) {
   Infer({method: "enumerate"}, function(){
 
     var utterance = utterancePrior(predicate)
-    var L0 = literalListener(utterance, threshold, prior)
+    var L0 = literalListener(utterance, threshold, stateProbs)
 
     factor(alpha_1 * L0.score(state))
 
@@ -587,39 +576,32 @@ var speaker1 = cache(function(state, threshold, prior, predicate) {
   })
 })
 
-var pragmaticListener = cache(function(utterance, predicate, world) {
+var pragmaticListener = cache(function(utterance, scale, world) {
   Infer({method: "enumerate"}, function(){
 
-    var prior = predicate == "height" ? scalePrior(predicate) : prevalencePrior(predicate, world)
+    var stateProbs = scale == "height" ? 
+        scalePrior(scale) : 
+    prevalencePrior(scale, world)
 
-    var state = statePrior(prior)
+    var state = statePrior(stateProbs)
     var threshold = thresholdPrior()
 
-    var S1 = speaker1(state, threshold, prior, predicate)
-    
+    var S1 = speaker1(state, threshold, stateProbs, scale)
+
     observe(S1, utterance)
 
     return state
   })
 })
 
-// speaker1(1, 0.9, scalePrior("height"), "height")
-// pragmaticListener("tall", "height")
-
 var worldWithTallness = map(function(thing){
-
-  var tallDistribution = Infer({method: "enumerate"},
-  function(){
+  var tallDistribution = Infer({method: "enumerate"}, function(){
     var utterance = utterancePrior("height")
-
-    observe(pragmaticListener(utterance, "height"), thing.height)
-
+    factor(pragmaticListener(utterance, "height").score(thing.height))
     return utterance
-
   })
-
-  return _.extend(thing, {tall: Math.exp(tallDistribution.score("tall"))})
-
+  return _.extend(thing, 
+                  {tall: Math.exp(tallDistribution.score("tall"))})
 }, theWorld)
 
 var speaker2 = function(k, f){
@@ -627,23 +609,26 @@ var speaker2 = function(k, f){
 
     var property = f.split(' ')[1]
     var degree = propertyDegrees[property]
-    var world = _.isNumber(theWorld[0][degree]) ? worldWithTallness : theWorld
+
+    var world = _.isNumber(theWorld[0][degree]) ? 
+        worldWithTallness :
+    theWorld
+
     var prev = prevalence(world, k, property)
 
     var utterance = utterancePrior(property)
 
     var L1 = pragmaticListener(utterance, property, world)
-
-    observe(L1, prev)
+//     print(prev)
+    factor(2*L1.score(prev))
 
     return utterance=="generic" ? 
-           k + "s " + f :
-          "don't think so"
+      k + "s " + f :
+    "don't think so"
   })
 }
 
-
-viz.auto(speaker2("lorch", "are tall"))
+viz.auto(speaker2("glippet", "are tall"))
 ~~~~
 
 References:
