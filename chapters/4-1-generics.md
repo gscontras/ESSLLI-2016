@@ -4,8 +4,6 @@ title: Generic language
 description: "Understanding generic language"
 ---
 
-# Generic language
-
 ## The philosophical problem
 
 Generic language (e.g. *Swans are white.*) is a simple and ubiquitous way to communicate generalizations about categories.  Linguists, philosophers, and psychologists have scratched their collective heads for decades, trying to figure out what makes a generic sentence true or false. At first glance, generics feel like universally-quantified statements as in *All swans are white*.  Unlike universals, however, generics are resilient to counter-examples (e.g., *Swans are white* even though there are black swans).  Our intuitions then fall back to something more vague like *Swans, in general, are white* because indeed most swans are white. But mosquitos, in general, do not carry malaria, yet everyone agrees *Mosquitos carry malaria*.
@@ -44,7 +42,7 @@ It is lower when there is more uncertainty about exactly how many within a kind 
 ~~~~
 ///fold:
 // discretized range between 0 - 1
-var bins = _.range(0.01, 1, 0.02);
+var bins = _.range(0.01, 1, 0.025);
 ///
 
 // function returns a discretized Beta PDF
@@ -90,8 +88,8 @@ viz.auto(structuredPriorModel({potential: 0.3,
 ~~~~
 ///fold:
 // discretized range between 0 - 1
-var bins = _.range(0.01, 1, 0.02);
-var thresholdBins = _.range(0, 1, 0.02);
+var bins = _.range(0.01, 1, 0.025);
+var thresholdBins = _.range(0, 1, 0.025);
 
 // function returns a discretized Beta PDF
 var discretizeBeta = function(g, d){
@@ -194,8 +192,8 @@ So we have a model that can interpret generic language (with a very simple seman
 ~~~~
 ///fold:
 // discretized range between 0 - 1
-var bins = _.range(0.01, 1, 0.02);
-var thresholdBins = _.range(0, 1, 0.02);
+var bins = _.range(0.01, 1, 0.025);
+var thresholdBins = _.range(0, 1, 0.025);
 
 // function returns a discretized Beta PDF
 var discretizeBeta = function(g, d){
@@ -283,8 +281,8 @@ var speaker2 = function(state, statePrior){
 
 var prevalence = 0.01
 
-print('Truth judgment of "Mosquitos carry malaria")
-print('...assuming ' + prevalence * 100 + '% of mosquitos carry malaria.')
+print('Truth judgment of "Mosquitos carry malaria"')
+print('...assuming (the speaker believes) ' + prevalence * 100 + '% of mosquitos carry malaria.')
                     
 var carriesMalariaPrior = structuredPriorModel({
   potential: 0.01, 
