@@ -1,7 +1,7 @@
 ---
-layout: subchapter
+layout: chapter
 title: Generic language
-description: "Generic language"
+description: "Extending and sythensizing extant models of predication"
 ---
 
 ### Day 4: Pragmatics rescues underspecified semantics 
