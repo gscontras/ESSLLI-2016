@@ -18,7 +18,7 @@ reft:tessler2016manuscript propose that the core meaning of a generic statement 
 
 This is a model of generic language used in reft:tessler2016manuscript .
 
-The model takes the generic $$[\![\text{K has F}]\!]$$ to mean the prevalence of property F within kind K (i.e., $$P(F \mid K)$$) is above some threshold (cf, Cohen 1999). This threshold is thought to be in general unknown (`threshold = uniform(0,1)`) and must be inferred in context. 
+The model takes the generic $$[\![\text{K has F}]\!]$$ to mean the prevalence of property F within kind K (i.e., $$P(F \mid K)$$) is above some threshold (cf. Cohen 1999). This threshold is thought to be in general unknown (`threshold = uniform(0,1)`) and must be inferred in context. 
 
 Context here takes the form of the listener and speakers shared beliefs about the property in question. The shape of this distribution affects the listener's interpretation, because the threshold must be calibrated to make utterances truthful and informative. The shape of this distribution varies significantly among different properties (e.g. *lays eggs*, *carries malaria*), and may be the result of a deeper conceptual model of the world. For instance, if speakers and listeners believe that some kinds have a causal mechanism that could give rise to the property, while others do not, then we would expect the prior to be structured as a mixture distribution (Cf. Griffiths & Tenenbaum, 2005). 
 
