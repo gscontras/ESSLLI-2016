@@ -24,12 +24,13 @@ First, let's try to understand the prior.
 
 #### Prior model
 
-The following model `structuredPriorModel` formalizes the idea that some kinds have a mechanism that *could* give rise to the property, while other do not. `potential` is a mixture parameter that governs the property's potential to be present in a kind (or, the frequency of a property across kinds). For example, "is female" has a high potential to be present in a kind; while "lays eggs" has less potential (owing to the fact that a lot of animals do not have any members who lay eggs). "Carries malaria" has a very potential to be present. `prevalenceWhenPresent` is the *mean prevalence when the property is present*. Knowing that the property is present in a kind, what % of the kind do you expect to have it? 
+The following model `structuredPriorModel` formalizes the idea that some kinds have a mechanism that *could* give rise to the property, while other do not. `potential` is a mixture parameter that governs the property's potential to be present in a kind (or, the frequency of a property across kinds). For example, "is female" has a high potential to be present in a kind; while "lays eggs" has less potential (owing to the fact that a lot of animals do not have any members who lay eggs). "Carries malaria" has a very low potential to be present. `prevalenceWhenPresent` is the *mean prevalence when the property is present*. Knowing that the property is present in a kind, what % of the kind do you expect to have it? 
 
 
 These two components of the prior can be probed from human intuitions through two questions:
 
 > We just discovered an animal on a far away island called a fep.
+
 > 1. How likely is it that there is a *fep* that has wings?
 > 2. Suppose there is a fep that has wings, what % of feps do you think have wings? 
 
