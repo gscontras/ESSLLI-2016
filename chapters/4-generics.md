@@ -26,6 +26,7 @@ First, let's try to understand the prior.
 
 The following model `structuredPriorModel` formalizes the idea that some kinds have a mechanism that *could* give rise to the property, while other do not. `potential` is a mixture parameter that governs the property's potential to be present in a kind (or, the frequency of a property across kinds). For example, "is female" has a high potential to be present in a kind; while "lays eggs" has less potential (owing to the fact that a lot of animals do not have any members who lay eggs). "Carries malaria" has a very potential to be present. `prevalenceWhenPresent` is the *mean prevelence when the property is present*. Knowing that the property is present in a kind, what % of the kind do you expect to have it? 
 
+
 These two components of the prior can be probed from human intuitions through two questions:
 
 > We just discovered an animal on a far away island called a fep.
@@ -33,6 +34,7 @@ These two components of the prior can be probed from human intuitions through tw
 > 2. Suppose there is a fep that has wings, what % of feps do you think have wings? 
 
 (Run through your intuitions with other properties like "is female", or "lays eggs".)
+
 
 Finally, `concentrationWhenPresent` is the concentration (conceptually, the inverse of variance) of that prevalence when present. It is high for properties that present in almost every kind in exactly the same proportion (e.g. "is female"). It is lower when there is more uncertainty about exactly how many within a kind are expected to have the property.
 
@@ -235,9 +237,9 @@ viz.auto(fepsCarryMalaria)
 
 ~~~~
 
-> **Exercise:** Test pragmatic listener interpretations of generics about different properties (hence, different priors).
+> **Exercise:** Test pragmatic listener's interpretations of generics about different properties (hence, different priors).
 
-So we have a model that can interpret generic language (with a very simple semantics). We can now imagine a speaker who thinks about this type of listener, and decides if a generic utterance is a good thing to say. Speaker models are interpreted as models of utterance production or endorsement (reft:DegenGoodman2014-Cogsci). When the alternative utterance is a null utterance, the model is interpreted as providing a truth judgment. (Note: You could also think about truth judgments with the altnernative of saying the negation e.g., it's not the case that Ks have F. Model behavior is very similar using that alternative in this case.)
+So we have a model that can interpret generic language (with a very simple semantics). We can now imagine a speaker who thinks about this type of listener, and decides if a generic utterance is a good thing to say. Speaker models are interpreted as models of utterance production or endorsement (reft:DegenGoodman2014-Cogsci). If we specify the alternative utterance to be a *null* utterance (or, *silence), we model the choice between uttering the generic (i.e., endorsing its truth) or nothing at all (i.e., not endorsing its truth). (Note: You could also think about truth judgments with the altnernative of saying the negation e.g., it's not the case that Ks have F. Model behavior is very similar using that alternative in this case.)
 
 ~~~~
 ///...
@@ -509,7 +511,7 @@ var prevalencePrior = function(property, world){
 viz.bar(stateBins, prevalencePrior("legs", theWorld))
 ~~~~
 
-
+With individuals in the world, the extended model evaluates generics with gradable adjectives (e.g., *giraffes are tall*) by first checking to see how many of a relevent subset of the kind could truthfully be described to hold the property *at the individual level*, and then using this information to infer the prevalence of the property in the kind. With prevalence in hand, the model proceeds as before.
 
 ~~~~
 ///fold:
