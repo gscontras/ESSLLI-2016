@@ -273,8 +273,12 @@ Let's add speaker2 into the full model.
 
 ~~~~
 ///fold:
+var round = function(x){
+  return Math.round(100*x)/100
+}
+
 // discretized range between 0 - 1
-var bins = _.range(0.01, 1, 0.025);
+var bins = map(round,_.range(0.01, 1, 0.025));
 var thresholdBins = _.range(0, 1, 0.025);
 
 // function returns a discretized Beta PDF
@@ -376,7 +380,7 @@ viz.auto(speaker2(prevalence, carriesMalariaPrior))
 
 > **Exercises:**
 
-> 1. Test *Birds lay eggs* vs. *Birds are female*.
+> 1. Test *Birds lay eggs* vs. *Birds are female*. (Note: The prevalence levels used as input to the speaker can only take values to the 0.01 decimal place. In addition, not all prevalence levels are available in this discretized prevalence space. If you get an error, try to +/- 0.01).
 > 2. Come up with other generic sentences. Hypothesize what the prior might be, and what the prevalence might be, and test the model on it.
 
 
