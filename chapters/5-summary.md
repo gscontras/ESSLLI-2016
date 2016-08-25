@@ -1,16 +1,20 @@
 ---
 layout: chapter
-title: Rethinking the ontology
-description: "Representing nouns, verbs, and modifiers"
+title: Summary and outlook
+description: "What have we done???"
 ---
 
-### Day 5: Representing nouns, verbs, and modifiers
+### Day 5: Summary and outlook
 
-  - Implications of the type distinctions 
-  - Nouns as distributions
-    - Determiners (*the* vs. *a*) and presupposition 
-  - Modification as conditioning
-  - Flexibility and inference in predication
+What have we done???
+
+> **Exercises:** 
+
+> 1. Discuss.
+> 2. Please tell us how you thought to course went by filling out this [short form](https://goo.gl/forms/yQFmjsoR9TwCpFT03).
+
+Thank you!
+
 
 <!-- ~~~~
 // Here is the code for the determiners model
