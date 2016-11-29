@@ -27,9 +27,9 @@ $$P_{L_{0}}(s\mid u) \propto [\![u]\!](s) \cdot P(s)$$
 // possible states of the world
 var worldPrior = function() {
   return uniformDraw([
-    {obj: "square", color: "blue"},
-    {obj: "circle", color: "blue"},
-    {obj: "square", color: "green"}
+    {shape: "square", color: "blue"},
+    {shape: "circle", color: "blue"},
+    {shape: "square", color: "green"}
   ])
 }
 
@@ -38,10 +38,10 @@ var utterances = ["blue","green","square","circle"]
 
 // meaning funtion to interpret the utterances
 var meaning = function(utterance, world){
-  return utterance == "blue" ? utterance==world.color :
-  utterance == "green" ? utterance==world.color :
-  utterance == "circle" ? utterance==world.obj :
-  utterance == "square" ? utterance==world.obj :
+  return utterance == "blue" ? world.color == "blue" :
+  utterance == "green" ? world.color == "green" :
+  utterance == "circle" ? world.shape == "circle" :
+  utterance == "square" ? world.shape == "square" :
   true
 }
 
@@ -174,9 +174,9 @@ Suppose a speaker wants to signal an object, but only has a single word with whi
 // possible states of the world
 var worldPrior = function() {
   return uniformDraw([
-    {obj: "square", color: "blue"},
-    {obj: "circle", color: "blue"},
-    {obj: "square", color: "green"}
+    {shape: "square", color: "blue"},
+    {shape: "circle", color: "blue"},
+    {shape: "square", color: "green"}
   ])
 }
 
@@ -185,12 +185,13 @@ var utterances = ["blue","green","square","circle"]
 
 // meaning funtion to interpret the utterances
 var meaning = function(utterance, world){
-  return utterance == "blue" ? utterance==world.color :
-  utterance == "green" ? utterance==world.color :
-  utterance == "circle" ? utterance==world.obj :
-  utterance == "square" ? utterance==world.obj :
+  return utterance == "blue" ? world.color == "blue" :
+  utterance == "green" ? world.color == "green" :
+  utterance == "circle" ? world.shape == "circle" :
+  utterance == "square" ? world.shape == "square" :
   true
 }
+
 
 // literal listener
 var literalListener = function(utterance){
@@ -228,7 +229,7 @@ var pragmaticListener = function(utterance){
 print("literal listener's interpretation of 'blue':")
 viz.table(literalListener( "blue"))
 print("speaker's utterance distribution for a blue circle:")
-viz.table(speaker({obj:"circle", color: "blue"}))
+viz.table(speaker({shape:"circle", color: "blue"}))
 print("pragmatic listener's interpretation of 'blue':")
 viz.table(pragmaticListener("blue"))
 
